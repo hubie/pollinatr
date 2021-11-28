@@ -1,0 +1,23 @@
+<div class="results headline">
+  <%= case @state.question do %>
+    <% %{question: question} -> %>
+        <div class="results headline question">
+          <%= question.question %>
+        </div>
+        <div class="results headline answers">
+          <%= for resultSet <- @state.results,
+          {answer, result} <- resultSet do %>
+            <div class="results headline answerset">
+              <div class="results headline answer" answer="<%= answer %>">
+                <%= answer %>
+              </div>
+              <div class="results headline result">
+                <%= result %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+    <% %{} -> %>
+  <% end %>
+
+</div>
