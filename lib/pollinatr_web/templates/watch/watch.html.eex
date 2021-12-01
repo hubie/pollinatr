@@ -54,4 +54,4 @@
       </script>
     <% end %>
 
-  <div><iframe scrolling="no" class="embeddedvote" src="/vote"></iframe></div>
+  <div><iframe scrolling="no" class="embeddedvote" src="/vote?embed=true"></iframe></div>

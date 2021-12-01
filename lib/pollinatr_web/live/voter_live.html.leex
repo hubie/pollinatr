@@ -1,32 +1,38 @@
-  <%= if @message != nil do %>
-    <div class="message"><%= @message %></div>
-  <% end %>
+<%= if @message != nil do %>
+  <div class="message"><%= @message %></div>
+<% end %>
 
-  <h1>
+<h1>
+<div class="voting">
   <%= case @show_mode do %>
     <%= :preshow -> %>
-      <h2>Welcome to the 2020 Slackies!</h2>
-      <p/>
-      The winners for some categories will be chosen by you lovely people!
-      The nominees will be introduced, and when it's time to place your vote, buttons to select the nominees will automatically appear – right here!
-      <p/>
-      Is it bringing power to the people or complete anarchy?  Whatever it is, it's happening!  
-    <%= :show -> %>
+      <div class="preshow">
+        <h2>2020 Slackies Voting</h2>
+        <p/>
+        Voting Categories will be displayed here.
+        <br/>
+        *&nbsp;Elevator Music Playing&nbsp;*
+        <p/>
+      </div>
+    <% :show -> %>
       <%= case @voter_state do %>
         <%= :voting_closed -> %>
-              The proposition is<span class="ellipsis-anim"><span>.</span><span>.</span><span>.</span>
-        <%= :voted -> %>
-            Your vote has been counted!
+              *&nbsp;Elevator Music<span class="ellipsis-anim"><span>.</span><span>.</span><span>.</span>&nbsp;*
+        <% :voted -> %>
+            <h2>You Voted!</h2>
+            <p/>
+            Tallying Votes
             <br/>
-            <i class="fas fa-vote-yea vote-counted"></i>
-        <%= :new_question -> %>
-          <%= question = @question
-            live_component(@socket, PollinatrWeb.Components.QuestionComponent, question: question) %>
-          <%= _ -> %>
+            *&nbsp;Suspenseful Music Playing&nbsp;*
+        <% :new_question -> %>
+          <%= live_component(PollinatrWeb.Components.QuestionComponent, question: @question) %>
+          <% _ -> %>
             <%= "Unknown state: #{@voter_state}" %>
         <% end %>
-      <%= :postshow -> %>
+      <% :postshow -> %>
           We hope you enjoyed the show!
-     <%= _ ->  %>
+     <% _ ->  %>
       <%= "Unknown show state #{inspect(@show_mode)}" %>
     <% end %>
+  </div>
+  </h1>

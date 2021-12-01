@@ -5,7 +5,6 @@ defmodule PollinatrWeb.Plug.Session do
 
 
   def redirect_unauthorized(%{assigns: %{email_address: email_address}} = conn, [resource: resource] = _opts) do
-    IO.inspect("LOLOL")
     cond do
       :ok == Bodyguard.permit(Pollinatr.User, resource, %{email_address: email_address}) ->
         conn
@@ -21,7 +20,6 @@ defmodule PollinatrWeb.Plug.Session do
   def redirect_unauthorized(conn, [resource: resource] = _opts) do
     user_id = Map.get(conn.assigns, :user_id)
     email_address = Map.get(conn.assigns, :email_address)
-IO.inspect(conn.assigns, label: "CONN ASSIGNS")
     cond do
       user_id == nil ->
         conn
@@ -57,14 +55,18 @@ IO.inspect(conn.assigns, label: "CONN ASSIGNS")
         case Phoenix.Token.verify(PollinatrWeb.Endpoint, signing_salt(), token,
                max_age: 806_400
              ) do
-          {:ok, %{type: :email, email_address: email_address}} ->
-            conn
-              |> assign(:email_address, email_address)
-              |> put_session("email_address", email_address)
           {:ok, user_id} ->
             conn
               |> assign(:user_id, user_id)
               |> put_session("user_id", user_id)
+          {:ok, %{type: :email, email_address: email_address}} ->
+            conn
+              |> assign(:email_address, email_address)
+              |> put_session("email_address", email_address)
+          {:ok, %{type: :validation_code, validation_code: validation_code}} ->
+            conn
+              |> assign(:validation_code, validation_code)
+              |> put_session("validation_cde", validation_code)
           _ ->
             conn
         end

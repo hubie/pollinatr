@@ -11,8 +11,8 @@ defmodule Pollinatr.User do
     %__MODULE__{id: email_address, role: :voter}
   end
 
-  def get_user(%{user_id: user_id}) do
-    get_user(%{validation_code: user_id})
+  def get_user(%{validation_code: validation_code}) do
+    get_user(%{validation_code: validation_code})
   end
 
   def get_user(user) do
@@ -94,6 +94,6 @@ defmodule Pollinatr.User do
   def authorize(_, %__MODULE__{role: :admin}, _), do: true
   def authorize(:voter, %__MODULE__{role: :voter}, _), do: true
   def authorize(action, %{email_address: email_address}, params), do: authorize(action, get_user(%{email_address: email_address}), params)
-  def authorize(action, %{user_id: user_id}, params), do: authorize(action, get_user(%{user_id: user_id}), params)
+  def authorize(action, %{validation_code: validation_code}, params), do: authorize(action, get_user(%{validation_code: validation_code}), params)
   def authorize(_action, _user, _params), do: false
 end

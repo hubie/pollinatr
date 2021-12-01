@@ -23,7 +23,7 @@ defmodule PollinatrWeb.Login.TokenRedeemer do
       {:ok, %{email_address: email_address} = payload} ->
         current_user = %User{email_address: email_address}
         insert_session_token(key, email_address)
-        IO.inspect(payload)
+
         assign(socket, key: key, current_user: current_user)
         redirect = socket |> push_redirect(to: Map.get(payload, :redirect_to, "/"))
         {:ok, redirect}

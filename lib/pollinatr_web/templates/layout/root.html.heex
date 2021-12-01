@@ -28,7 +28,7 @@
     <script type="text/javascript" src="https://cdn.myth.theoplayer.com/1230daef-f515-4df9-b106-eacd30822514/THEOplayer.js"></script>
     <link rel="stylesheet" type="text/css" href="https://cdn.myth.theoplayer.com/1230daef-f515-4df9-b106-eacd30822514/ui.css" />
  %>  </head>
-  <body {if assigns[:embed] == nil, do: [], else: [class: "embedded"]}>
+  <body {if assigns[:embed] == "true", do: [class: "embedded"], else: []}>
     <!--
 ##    ##  #######  ##     ## #### ########  ########             ###             ########  #### ########
  ##  ##  ##     ## ##     ## #### ##     ## ##                  ## ##            ##     ##  ##     ##
@@ -58,12 +58,12 @@ in these COVID times.  It is my intention to take the my learnings and rewrite t
 Comedy, and even Webinars, classes, and quizzes can make use of it.  If you're interested in helping, (and I could obviously use some help
 on the front end 🙃), want to chat about functional programming, or just feel like it, drop me a line and let's chat!
 -->
-  <%= if assigns[:embed] == nil do %>
+  <%= if assigns[:embed] == "true" do %>
+    <%= @inner_content %>
+  <% else %>
     <div class="content-body">
       <%= @inner_content %>
     </div>
-  <% else %>
-    <%= @inner_content %>
   <% end %>
 
   </body>
