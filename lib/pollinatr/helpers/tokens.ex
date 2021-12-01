@@ -1,4 +1,4 @@
-defmodule Pollinatr.Tokens do
+defmodule Pollinatr.Helpers.Tokens do
   @default_ttl 1 * 60 * 60 # 1 hour
 
   def encrypt(context, data) do

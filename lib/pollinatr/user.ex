@@ -1,11 +1,15 @@
 defmodule Pollinatr.User do
   @behaviour Bodyguard.Policy
 
-  defstruct validation_code: nil, id: nil, role: nil
+  defstruct validation_code: nil, id: nil, role: nil, email_address: nil
 
   @voter_codes []
   @admin_codes [System.get_env("ADMIN_LOGIN_CODE")]
   @refresh_period 120
+
+  def get_user(%{email_address: email_address}) do
+    %__MODULE__{id: email_address, role: :voter}
+  end
 
   def get_user(%{user_id: user_id}) do
     get_user(%{validation_code: user_id})
@@ -89,6 +93,7 @@ defmodule Pollinatr.User do
 
   def authorize(_, %__MODULE__{role: :admin}, _), do: true
   def authorize(:voter, %__MODULE__{role: :voter}, _), do: true
+  def authorize(action, %{email_address: email_address}, params), do: authorize(action, get_user(%{email_address: email_address}), params)
   def authorize(action, %{user_id: user_id}, params), do: authorize(action, get_user(%{user_id: user_id}), params)
   def authorize(_action, _user, _params), do: false
 end

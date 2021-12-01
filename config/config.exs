@@ -23,13 +23,15 @@ config :pollinatr, PollinatrWeb.Endpoint,
   streamshark_stream_url: System.get_env("STREAMSHARK_STREAM_URL"),
   aws_ivs_stream_url: System.get_env("AWS_IVS_STREAM_URL")
 
+
+config :pollinatr, Pollinatr.Helpers.Email,
+  from_address: System.get_env("EMAIL_FROM")
+
+
 config :goth, json: System.get_env("GOOGLE_SERVICE_KEY")
 
 config :elixir_google_spreadsheets, :client,
   request_workers: 20
-
-config :pollinatr, MajorityFinder.Services.Email,
-  from_address: System.get_env("EMAIL_FROM")
 
 
 # Configures the mailer
@@ -39,7 +41,7 @@ config :pollinatr, MajorityFinder.Services.Email,
 #
 # For production it's recommended to configure a different adapter
 # at the `config/runtime.exs`.
-config :pollinatr, Pollinatr.Mailer, adapter: Swoosh.Adapters.Local
+config :pollinatr, Pollinatr.Helpers.Mailer, adapter: Swoosh.Adapters.Local
 
 # Swoosh API client is needed for adapters other than SMTP.
 config :swoosh, :api_client, false

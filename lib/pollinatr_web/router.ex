@@ -25,10 +25,6 @@ defmodule PollinatrWeb.Router do
     plug :redirect_unauthorized, resource: :admin
   end
 
-  pipeline :api do
-    plug :accepts, ["json"]
-  end
-
 
   scope "/", PollinatrWeb do
     pipe_through :browser
@@ -36,6 +32,8 @@ defmodule PollinatrWeb.Router do
     live "/admin", Login.AccessCodeLive, :index
 
     live "/login", Login.MagicTokenLive, :index, as: :login
+
+    live "/magical-redeemer", Login.TokenRedeemer, :index, as: :redeem
 
     live("/results", Results)
     live("/results/:view", Results)

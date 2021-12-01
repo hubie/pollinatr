@@ -28,7 +28,7 @@ import topbar from "../vendor/topbar"
 
 
 
-require("chartkick")
+// require("chartkick")
 import "chartkick/chart.js"
 
 var TimerClass = require("easytimer.js").Timer
@@ -62,9 +62,10 @@ Hooks.Timer = {
 }
 Hooks.ResultsChart = {
   mounted() {
-
     var ctx = document.getElementById('resultsChart');
-    Chart.defaults.global.defaultFontFamily='Montserrat, sans-serif'
+    // Chart.defaults.global.defaultFontFamily='Montserrat, sans-serif'
+    Chart.defaults.font.family='Montserrat, sans-serif'
+
     var resultsChart = new Chart(ctx, {
         type: 'bar',
         data: {
@@ -94,59 +95,93 @@ Hooks.ResultsChart = {
         options: {
             responsive: true,
             maintainAspectRatio: false,
-            legend: {
-              display: false
+            plugins: {
+              legend: {
+                display: false
+              }
             },
             scales: {
-                yAxes: [{
+                y: {
                     ticks: {
-                        fontSize: 30,
-                        beginAtZero: true,
-                        precision: 0
+                      font: {
+                        size: 30,
+                      },
+                      beginAtZero: true,
+                      precision: 0
                     }
-                }],
-                xAxes: [{
+                },
+                x: {
                   color: 'rbga(1,1,1,1)',
                   ticks: {
-                    fontSize: 30,
-                    fontColor: 'rgb(242,188,35)',
-                    fontStyle: 'bold',
-                    callback: function(label, index, labels) {
-                                if (/\s/.test(label)) {
-                                    return label.split(" ");
-                                } else {
-                                    return label;
-                                }
-                            }
-                        }
-                }]
+                    font: {
+                      size: 30,
+                      weight: 'bold',
+                    },
+                    autoSkip: false,
+                    maxRotation: 0,
+                    color: 'rgb(242,188,35)',
+                    callback: function(val, index) {
+                      return this.getLabelForValue(val).split("\n");
+                    }
+                  }
+                }
             }
         }
     });
 
     this.handleEvent("new_results", ({data}) => {
-        console.log(data)
-        // resultsChart.data.labels = Object.keys(data)
         var labels = []
         var values = []
-        data.forEach((lineitem) => {
-            labels.push(Object.keys(lineitem))
-            values.push(Object.values(lineitem))
-        })
+        if( Object.keys(data).length ) {
+          data.forEach((lineitem) => {
+              labels.push(formatLabel(Object.keys(lineitem)[0], Object.keys(data).length))
+              values.push(Object.values(lineitem)[0])
+          })
 
-        resultsChart.data.datasets[0].data = [].concat.apply([], values)
-        resultsChart.data.labels = [].concat.apply([], labels)
-
-        resultsChart.update();
+          resultsChart.data.datasets[0].data = [].concat.apply([], values)
+          resultsChart.data.labels = [].concat.apply([], labels)
+          resultsChart.update();
+        }
       }
     )
   }
 }
 
+function formatLabel(raw, totalCount) {
+    var formattedLabel = "";
+    var chunk = "";
+    raw.split(" ").forEach((word) => {
+      if(getWidthOfText(chunk+" "+word, 'Montserrat, sans-serif', '30px') > (getScaleWidth()/totalCount)) {
+        formattedLabel += (formattedLabel.length ? "\n"+chunk : chunk);
+        chunk = word;
+      } else {
+        chunk += chunk.length ? " "+word : word;
+      }
+    });
+    formattedLabel += (formattedLabel.length ? "\n"+chunk : chunk);
+    return formattedLabel
+}
+
+function getScaleWidth() {
+  var scale = Chart.getChart('resultsChart').scales.x;
+  return scale.width - scale._margins.left - scale._margins.right;
+}
+
+function getWidthOfText(txt, fontname, fontsize){
+    if(getWidthOfText.c === undefined){
+        getWidthOfText.c=document.createElement('canvas');
+        getWidthOfText.ctx=getWidthOfText.c.getContext('2d');
+    }
+    var fontspec = fontsize + ' ' + fontname;
+    if(getWidthOfText.ctx.font !== fontspec)
+        getWidthOfText.ctx.font = fontspec;
+    return getWidthOfText.ctx.measureText(txt).width;
+}
+
 
 
 let csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute("content")
-let liveSocket = new LiveSocket("/live", Socket, {params: {_csrf_token: csrfToken}})
+let liveSocket = new LiveSocket("/live", Socket, {hooks: Hooks, params: {_csrf_token: csrfToken}})
 
 // Show progress bar on live navigation and form submits
 topbar.config({barColors: {0: "#29d"}, shadowColor: "rgba(0, 0, 0, .3)"})

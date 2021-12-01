@@ -18,7 +18,7 @@ defmodule PollinatrWeb.Login.MagicTokenLive do
 
               <div>
                 <label class="login access-code-label" for="form_email">Enter Email Address:</label>
-                <%= email_input f, :validation_code, [class: "login password-box focus:border focus:border-b-0 rounded border", placeholder: "Email", aria_required: "true"] %>
+                <%= email_input f, :email_address, [class: "login password-box focus:border focus:border-b-0 rounded border", placeholder: "Email", aria_required: "true"] %>
                 <%= submit "Submit" %>
               </div>
             </fieldset>
@@ -43,13 +43,16 @@ defmodule PollinatrWeb.Login.MagicTokenLive do
   @impl true
   def handle_event(
         "save",
-        %{"user" => %{"validation_code" => validation_code} = params},
-        socket
+        %{"user" => %{"email_address" => email_address} = params},
+        %{assigns: %{:return_to => return_to}} = socket
       ) do
+
     if Map.get(params, "form_disabled", nil) != "true" do
-      current_user =
-        Pollinatr.Login.Form.get_user_by_code(%User{validation_code: validation_code})
-      send(self(), {:disable_form, current_user})
+      Pollinatr.Helpers.Email.login_email(%{to: email_address, redirect_to: return_to  || "/"})
+        |> Pollinatr.Helpers.Mailer.deliver()
+      current_user = nil
+      #   Pollinatr.Login.Form.get_user_by_code(%User{email_address: email_address})
+      # send(self(), {:disable_form, current_user})
       {:noreply, assign(socket, current_user: current_user)}
     else
       {:noreply, socket}

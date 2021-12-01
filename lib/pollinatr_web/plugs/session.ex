@@ -3,9 +3,25 @@ defmodule PollinatrWeb.Plug.Session do
   import Phoenix.Controller, only: [redirect: 2, put_flash: 3]
   import PollinatrWeb.Live.Helper, only: [signing_salt: 0]
 
+
+  def redirect_unauthorized(%{assigns: %{email_address: email_address}} = conn, [resource: resource] = _opts) do
+    IO.inspect("LOLOL")
+    cond do
+      :ok == Bodyguard.permit(Pollinatr.User, resource, %{email_address: email_address}) ->
+        conn
+      true ->
+        conn
+          |> put_flash(:info, "Unauthorized")
+          |> put_session(:return_to, conn.request_path)
+          |> redirect(to: PollinatrWeb.Router.Helpers.login_path(conn, :index))
+          |> halt()
+    end
+  end
+
   def redirect_unauthorized(conn, [resource: resource] = _opts) do
     user_id = Map.get(conn.assigns, :user_id)
-
+    email_address = Map.get(conn.assigns, :email_address)
+IO.inspect(conn.assigns, label: "CONN ASSIGNS")
     cond do
       user_id == nil ->
         conn
@@ -41,6 +57,10 @@ defmodule PollinatrWeb.Plug.Session do
         case Phoenix.Token.verify(PollinatrWeb.Endpoint, signing_salt(), token,
                max_age: 806_400
              ) do
+          {:ok, %{type: :email, email_address: email_address}} ->
+            conn
+              |> assign(:email_address, email_address)
+              |> put_session("email_address", email_address)
           {:ok, user_id} ->
             conn
               |> assign(:user_id, user_id)

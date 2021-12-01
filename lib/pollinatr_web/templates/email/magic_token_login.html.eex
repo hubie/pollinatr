@@ -1,10 +1,3 @@
-<style>
-    .inner-template{
-        font-size: 120%;
-        color: lightgreen;
-    }
-</style>
-
 <table role="presentation" border="0" cellpadding="0" cellspacing="0">
   <tr>
     <td>
