@@ -48,14 +48,14 @@ defmodule PollinatrWeb.Router do
     pipe_through [:browser, :voter]
 
     # live "/", VoterLive, :index
-    live "/vote", VoterLive, :index
+    live "/vote", VoterLive, :index, as: :vote
   end
 
   scope "/", PollinatrWeb do
     pipe_through [:browser, :voter]
 
     get "/", WatchController, :index
-    get "/watch", WatchController, :index
+    get "/watch", WatchController, :index, as: :watch
   end
 
   # Other scopes may use custom stacks.

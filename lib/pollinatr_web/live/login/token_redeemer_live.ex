@@ -18,24 +18,19 @@ defmodule PollinatrWeb.Login.TokenRedeemer do
   end
 
   @impl true
-  def mount(%{"token" => token} = _params, %{"session_uuid" => key} = _session, socket) do
-    case Tokens.decrypt(:magic_token, token) do
+  def mount(params, %{"session_uuid" => key} = _session, socket) do
+    case Tokens.decrypt(:magic_token, params["token"] || "") do
       {:ok, %{email_address: email_address} = payload} ->
         current_user = User.get_user(%{email_address: email_address})
         insert_session_token(key, current_user.id)
 
-        assign(socket, key: key, user_id: current_user.id)
-        redirect = socket |> push_redirect(to: Map.get(payload, :redirect_to, "/"))
-        {:ok, redirect}
+        {:ok, push_redirect(socket, to: Map.get(payload, :redirect_to, "/"))}
       {:error, _} ->
-        put_flash(socket, :error, "Invalid login token")
-        {:ok, socket |> push_redirect(to: Routes.login_path(Endpoint, :index))}
+        {:ok, socket
+          |> push_redirect(to: Routes.login_path(Endpoint, :index))
+          |> put_flash(:error, "Invalid login token")
+        }
     end
-  end
-
-  def mount(_params, _session, socket) do
-      put_flash(socket, :error, "Missing token")
-      {:ok, socket |> push_redirect(to: Routes.login_path(Endpoint, :index))}
   end
 
   def insert_session_token(key, user_id) do
