@@ -4,28 +4,11 @@ defmodule PollinatrWeb.Plug.Session do
   import PollinatrWeb.Live.Helper, only: [signing_salt: 0]
 
 
-  def redirect_unauthorized(%{assigns: %{email_address: email_address}} = conn, [resource: resource] = _opts) do
-    cond do
-      :ok == Bodyguard.permit(Pollinatr.User, resource, %{email_address: email_address}) ->
-        conn
-      true ->
-        conn
-          |> put_flash(:info, "Unauthorized")
-          |> put_session(:return_to, conn.request_path)
-          |> redirect(to: PollinatrWeb.Router.Helpers.login_path(conn, :index))
-          |> halt()
-    end
-  end
-
   def redirect_unauthorized(conn, [resource: resource] = _opts) do
     user_id = Map.get(conn.assigns, :user_id)
-    email_address = Map.get(conn.assigns, :email_address)
+    role = Map.get(conn.assigns, :role)
+
     cond do
-      user_id == nil ->
-        conn
-          |> put_session(:return_to, conn.request_path)
-          |> redirect(to: PollinatrWeb.Router.Helpers.login_path(conn, :index))
-          |> halt()
       :ok == Bodyguard.permit(Pollinatr.User, resource, %{user_id: user_id}) ->
         conn
       true ->
@@ -66,7 +49,7 @@ defmodule PollinatrWeb.Plug.Session do
           {:ok, %{type: :validation_code, validation_code: validation_code}} ->
             conn
               |> assign(:validation_code, validation_code)
-              |> put_session("validation_cde", validation_code)
+              |> put_session("validation_code", validation_code)
           _ ->
             conn
         end

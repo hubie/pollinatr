@@ -7,12 +7,17 @@ defmodule Pollinatr.User do
   @admin_codes [System.get_env("ADMIN_LOGIN_CODE")]
   @refresh_period 120
 
-  def get_user(%{email_address: email_address}) do
-    %__MODULE__{id: email_address, role: :voter}
+  def get_user(%{user_id: user_id}) do
+    case :ets.lookup(:users, :"#{user_id}") do
+      [{_id, user}] ->
+        user
+      nope ->
+        IO.inspect(nope, label: "USER NOT FOUND")
+    end
   end
 
-  def get_user(%{validation_code: validation_code}) do
-    get_user(%{validation_code: validation_code})
+  def get_user(%{email_address: email_address}) do
+    new_user(%{email_address: email_address, role: :voter})
   end
 
   def get_user(user) do
@@ -35,9 +40,9 @@ defmodule Pollinatr.User do
     IO.inspect(:ets.lookup(:auth_codes, :"#{validation_code}"), label: "USER")
     case :ets.lookup(:auth_codes, :"#{validation_code}") do
       [{_, :admin}] ->
-        %__MODULE__{validation_code: validation_code, id: validation_code, role: :admin}
+        new_user(%{validation_code: validation_code, role: :admin})
       [{_, :voter}] ->
-        %__MODULE__{validation_code: validation_code, id: validation_code, role: :voter}
+        new_user(%{validation_code: validation_code, role: :voter})
       meh ->
         case list_state do
           :stale ->
@@ -51,6 +56,19 @@ defmodule Pollinatr.User do
             false
         end
     end
+  end
+
+  defp new_user(%{validation_code: code, role: role}) do
+    save_user(%__MODULE__{id: "code_"<>code, role: role, validation_code: code})
+  end
+
+  defp new_user(%{email_address: email, role: role}) do
+    save_user(%__MODULE__{id: "email_"<>email, role: role, email_address: email})
+  end
+
+  defp save_user(%{id: user_id} = user) do
+    :ets.insert(:users, {:"#{user_id}", user})
+    user
   end
 
   defp refresh_voter_codes() do
@@ -93,7 +111,8 @@ defmodule Pollinatr.User do
 
   def authorize(_, %__MODULE__{role: :admin}, _), do: true
   def authorize(:voter, %__MODULE__{role: :voter}, _), do: true
-  def authorize(action, %{email_address: email_address}, params), do: authorize(action, get_user(%{email_address: email_address}), params)
-  def authorize(action, %{validation_code: validation_code}, params), do: authorize(action, get_user(%{validation_code: validation_code}), params)
+  def authorize(action, %{user_id: user_id}, params), do: authorize(action, get_user(%{user_id: user_id}), params)
+  # def authorize(action, %{email_address: email_address}, params), do: authorize(action, get_user(%{email_address: email_address}), params)
+  # def authorize(action, %{validation_code: validation_code}, params), do: authorize(action, get_user(%{validation_code: validation_code}), params)
   def authorize(_action, _user, _params), do: false
 end

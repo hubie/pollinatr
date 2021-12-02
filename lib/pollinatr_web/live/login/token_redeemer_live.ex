@@ -18,13 +18,13 @@ defmodule PollinatrWeb.Login.TokenRedeemer do
   end
 
   @impl true
-  def mount(%{"token" => token} = params, %{"session_uuid" => key} = _session, socket) do
+  def mount(%{"token" => token} = _params, %{"session_uuid" => key} = _session, socket) do
     case Tokens.decrypt(:magic_token, token) do
       {:ok, %{email_address: email_address} = payload} ->
-        current_user = %User{email_address: email_address}
-        insert_session_token(key, email_address)
+        current_user = User.get_user(%{email_address: email_address})
+        insert_session_token(key, current_user.id)
 
-        assign(socket, key: key, current_user: current_user)
+        assign(socket, key: key, user_id: current_user.id)
         redirect = socket |> push_redirect(to: Map.get(payload, :redirect_to, "/"))
         {:ok, redirect}
       {:error, _} ->
@@ -38,9 +38,9 @@ defmodule PollinatrWeb.Login.TokenRedeemer do
       {:ok, socket |> push_redirect(to: Routes.login_path(Endpoint, :index))}
   end
 
-  def insert_session_token(key, email_address) do
+  def insert_session_token(key, user_id) do
     salt = signing_salt()
-    token = Phoenix.Token.sign(Endpoint, salt, %{type: :email, email_address: email_address})
+    token = Phoenix.Token.sign(Endpoint, salt, user_id)
     :ets.insert(:auth_table, {:"#{key}", token})
   end
 end

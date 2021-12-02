@@ -30,15 +30,13 @@ defmodule PollinatrWeb.Login.AccessCodeLive do
 
   @impl true
   def mount(_params, %{"session_uuid" => key, "return_to" => return_to} = _session, socket) do
-    current_user = %User{}
-    {:ok, assign(socket, key: key, current_user: current_user, return_to: return_to)}
+    {:ok, assign(socket, key: key, return_to: return_to)}
   end
 
   @impl true
   def mount(params, %{"session_uuid" => key} = _session, socket) do
     mount(params, %{"session_uuid" => key, "return_to" => "/"}, socket)
   end
-
 
   @impl true
   def handle_event(
@@ -48,9 +46,9 @@ defmodule PollinatrWeb.Login.AccessCodeLive do
       ) do
     if Map.get(params, "form_disabled", nil) != "true" do
       current_user =
-        Pollinatr.Login.Form.get_user_by_code(%User{validation_code: validation_code})
+        Pollinatr.Login.Form.get_user_by_code(validation_code)
       send(self(), {:disable_form, current_user})
-      {:noreply, assign(socket, current_user: current_user)}
+      {:noreply, assign(socket, user_id: current_user.id)}
     else
       {:noreply, socket}
     end
@@ -58,17 +56,16 @@ defmodule PollinatrWeb.Login.AccessCodeLive do
 
   @impl true
   def handle_info(
-        {:disable_form, current_user},
+        {:disable_form, changeset},
         %{assigns: %{:key => key, :return_to => return_to}} = socket
       ) do
-    case current_user do
+    case changeset do
       %User{id: user_id} ->
         insert_session_token(key, user_id)
         redirect = socket |> redirect(to: return_to)
         {:noreply, redirect}
-
       _ ->
-        {:noreply, assign(socket, current_user: current_user)}
+        {:noreply, socket}
     end
   end
 
