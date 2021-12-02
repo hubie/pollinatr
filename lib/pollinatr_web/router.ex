@@ -58,6 +58,12 @@ defmodule PollinatrWeb.Router do
     get "/watch", WatchController, :index, as: :watch
   end
 
+  scope "/", PollinatrWeb do
+    pipe_through [:browser, :voter]
+
+    live "/chat", ChatLive, :index, as: :chat
+  end
+
   # Other scopes may use custom stacks.
   # scope "/api", PollinatrWeb do
   #   pipe_through :api

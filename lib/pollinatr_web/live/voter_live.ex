@@ -1,5 +1,5 @@
 defmodule PollinatrWeb.VoterLive do
-  use Phoenix.LiveView, template: {PollinatrWeb.LayoutView, "embedded.html"}
+  use Phoenix.LiveView
 
   alias Pollinatr.Presence
   alias Pollinatr.Results

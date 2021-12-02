@@ -20,7 +20,7 @@ defmodule Pollinatr.Application do
       # {Pollinatr.Worker, arg}
       Pollinatr.Presence,
       {Pollinatr.ResultsSupervisor, [name: Pollinatr.ResultsSupervisor]},
-      # {Pollinatr.Metrics, [name: Pollinatr.Metrics]},
+      {Pollinatr.Chat.Supervisor, [name: Pollinatr.Chat.Supervisor]},
       {Pollinatr.Questions, [name: Pollinatr.Questions]},
 
     ]

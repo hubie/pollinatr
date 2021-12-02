@@ -5,14 +5,14 @@ defmodule Pollinatr.Questions do
     questions: []
   }
 
-  # @metricsInjestion inspect(Pollinatr.Metrics)
+  # @metricsIngestion inspect(Pollinatr.Metrics)
 
   def start_link(args) do
     GenServer.start_link(__MODULE__, nil, args)
   end
 
   def subscribe do
-    # Phoenix.PubSub.subscribe(Pollinatr.PubSub, @metricsInjestion)
+    # Phoenix.PubSub.subscribe(Pollinatr.PubSub, @metricsIngestion)
   end
 
   @impl true
