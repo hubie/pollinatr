@@ -6,7 +6,6 @@ defmodule PollinatrWeb.Plug.Session do
 
   def redirect_unauthorized(conn, [resource: resource] = _opts) do
     user_id = Map.get(conn.assigns, :user_id)
-    role = Map.get(conn.assigns, :role)
 
     cond do
       :ok == Bodyguard.permit(Pollinatr.User, resource, %{user_id: user_id}) ->
@@ -42,18 +41,9 @@ defmodule PollinatrWeb.Plug.Session do
             conn
               |> assign(:user_id, user_id)
               |> put_session("user_id", user_id)
-          {:ok, %{type: :email, email_address: email_address}} ->
-            conn
-              |> assign(:email_address, email_address)
-              |> put_session("email_address", email_address)
-          {:ok, %{type: :validation_code, validation_code: validation_code}} ->
-            conn
-              |> assign(:validation_code, validation_code)
-              |> put_session("validation_code", validation_code)
           _ ->
             conn
         end
-
       _ ->
         conn
     end
