@@ -6,6 +6,7 @@ defmodule Pollinatr.Helpers.Tokens do
   end
 
   def decrypt(context, ciphertext, max_age \\ @default_ttl) when is_binary(ciphertext) do
+    IO.inspect(Plug.Crypto.decrypt(secret(), to_string(context), ciphertext, max_age: max_age))
     Plug.Crypto.decrypt(secret(), to_string(context), ciphertext, max_age: max_age)
   end
 

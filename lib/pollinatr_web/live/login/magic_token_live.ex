@@ -6,9 +6,10 @@ defmodule PollinatrWeb.Login.MagicTokenLive do
   @impl true
   def render(assigns) do
     ~L"""
-        <div class="login header">
-          Welcome to the Slackies
-        </div>
+      <div class="login header">
+        Welcome to the Slackies
+      </div>
+      <%= if @email_sent != true do %>
         <div class="login-box-container">
           <%= form_for :user, "#", [phx_submit: :save, autocomplete: "off", autocorrect: "off", autocapitalize: "off", spellcheck: "false"], fn f -> %>
             <fieldset class="flex flex-col md:w-full">
@@ -21,20 +22,19 @@ defmodule PollinatrWeb.Login.MagicTokenLive do
             </fieldset>
           <% end %>
         </div>
-    </div>
+      <% else %>
+        <div class="email-sent-container">
+          Check your email for login links!
+        </div>
+      <% end %>
+
     """
   end
 
   @impl true
-  def mount(_params, %{"session_uuid" => key, "return_to" => return_to} = _session, socket) do
-    {:ok, assign(socket, key: key, return_to: return_to)}
+  def mount(_params, %{"session_uuid" => key} = session, socket) do
+    {:ok, assign(socket, email_sent: nil, key: key, return_to: session["return_to"] || "/")}
   end
-
-  @impl true
-  def mount(params, %{"session_uuid" => key} = _session, socket) do
-    mount(params, %{"session_uuid" => key, "return_to" => "/"}, socket)
-  end
-
 
   @impl true
   def handle_event(
@@ -46,6 +46,9 @@ defmodule PollinatrWeb.Login.MagicTokenLive do
     if Map.get(params, "form_disabled", nil) != "true" do
       Pollinatr.Helpers.Email.login_email(%{to: email_address, redirect_to: return_to  || "/"})
         |> Pollinatr.Helpers.Mailer.deliver()
+      socket = socket
+        |> put_flash(:info, "Email sent to " <> email_address)
+        |> assign(email_sent: true)
       {:noreply, socket}
     else
       {:noreply, socket}

@@ -17,10 +17,11 @@ defmodule Pollinatr.User do
   end
 
   def get_user(%{email_address: email_address}) do
+    IO.inspect("CREATED NEW USER")
     new_user(%{email_address: email_address, role: :voter})
   end
 
-  def get_user(user) do
+  def get_user(%{validation_code: validation_code} = user) do
     IO.inspect(user, label: "USER")
     current_time = DateTime.utc_now |> DateTime.to_unix
     case :ets.lookup(:auth_meta, :last_refresh) do
@@ -36,7 +37,7 @@ defmodule Pollinatr.User do
     end
   end
 
-  def get_user(%{validation_code: validation_code} = user, list_state) do
+  defp get_user(%{validation_code: validation_code} = user, list_state) do
     IO.inspect(:ets.lookup(:auth_codes, :"#{validation_code}"), label: "USER")
     case :ets.lookup(:auth_codes, :"#{validation_code}") do
       [{_, :admin}] ->
