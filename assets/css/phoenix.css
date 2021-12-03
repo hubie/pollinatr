@@ -19,10 +19,10 @@ pre{padding: 1em;}
 
 .container{
   margin: 0 auto;
-  max-width: 80.0rem;
+  /*max-width: 80.0rem;*/
   padding: 0 2.0rem;
   position: relative;
-  width: 100%
+  min-width: 100%;
 }
 select {
   width: auto;
@@ -132,22 +132,6 @@ button {
   font-size: 1.5rem;
 }
 
-.chat-container {
-  display: flex;
-  flex-flow: column;
-  height: 100%;
-  max-height: 100vh;
-}
-.chat-container .chat-box {
-  flex: 1 1 auto;
-  overflow-y:auto;
-}
-.chat-container .compose-message-box {
-  flex:  0 0 6rem;
-}
-
-
-
 .voting {
   color: white;
   font-family: Montserrat, sans-serif;
@@ -179,12 +163,50 @@ button {
 
 .content-body {
   margin:  3rem;
-  /*padding: 6rem;*/
-  /*box-sizing: border-box;*/
   background-color: rgba(0,0,0,0.85);
-  height: /*calc(100% - 6rem)*/;
-  min-height: calc(100vh - 6rem);
   position: relative;
+
+}
+
+.watch-layout {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: stretch;
+  align-content: stretch;
+}
+
+.watch-container {
+  display:  flex;
+  flex: 3 1 120rem;
+
+}
+
+.embed-chat-container {
+  display: flex;
+  flex: 1 1 40rem;
+}
+
+.chat-container {
+  display: flex;
+  flex-flow: column;
+}
+.chat-container .chat-box {
+  flex: 1;
+  overflow-y: auto;
+  color: white;
+  min-height: 40rem;
+  max-height: 60rem;
+}
+.chat-container .compose-message-box {
+  flex: 1;
+}
+
+
+.embed-vote-container {
+  display: flex;
+  width:  50%;
+  flex: 1 1 auto;
 }
 
 li {
@@ -259,12 +281,9 @@ li {
 .chart-container {
   width: 100%;
   height: 100%;
-/*  min-width: 0;
-  min-height: 0;
-*/  position: absolute;
+  position: absolute;
   left: 0;
   top: 0;
-  /*min-height: 100%;*/
   flex-grow: 2;
 }
 
@@ -318,24 +337,13 @@ li {
 }
 
 .votepanel {
-  flex-grow: 1;
+/*  flex-grow: 1;
   min-height: 40rem;
-  /*position: relative;*/
+*/  /*position: relative; */
 }
 
 .videopanel {
-  flex-grow: 3;
-}
-
-.embeddedvote {
-  padding-top: 2rem;
-  border: 0;
-  min-height: 100rem;
-  left: 0;
-  overflow-y: hidden;
-  /*position: absolute;*/
-  top: 0;
-  width: 100%;
+  /*flex-grow: 3;*/
 }
 
 .ellipsis-anim span {

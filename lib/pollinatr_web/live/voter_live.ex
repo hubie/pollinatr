@@ -25,6 +25,10 @@ defmodule PollinatrWeb.VoterLive do
     message: ""
   }
 
+  def mount(:not_mounted_at_router, session, socket) do
+    mount(%{"embed": "true"}, session, socket)
+  end
+
   def mount(params, %{"session_uuid" => key} = _session, socket) do
     if connected?(socket), do: subscribe()
 
@@ -35,11 +39,7 @@ defmodule PollinatrWeb.VoterLive do
       %{}
     )
 
-    embed = cond do
-      params["embed"] == "true" -> "true"
-      Map.has_key?(params, :not_mounted_at_router) -> "true"
-      true -> "false"
-    end
+    embed = Map.get(params, "embed", "false")
 
     %{show_mode: show_mode, message: message} = GenServer.call(Results, :get_show_state)
 

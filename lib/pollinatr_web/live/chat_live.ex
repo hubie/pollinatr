@@ -23,6 +23,10 @@ defmodule PollinatrWeb.ChatLive do
     messages: [],
   }
 
+  def mount(:not_mounted_at_router, session, socket ) do
+    mount(%{"embed": "true"}, session, socket)
+  end
+
   def mount(params, %{"session_uuid" => key, "user_id" => user_id} = _session, socket) do
     if connected?(socket), do: subscribe()
 
@@ -32,12 +36,7 @@ defmodule PollinatrWeb.ChatLive do
     #   socket.id,
     #   %{}
     # )
-
-    embed = cond do
-      params["embed"] == "true" -> "true"
-      Map.has_key?(params, :not_mounted_at_router) -> "true"
-      true -> "false"
-    end
+    embed = Map.get(params, "embed", "false")
 
     {:ok, assign(socket, %{@initial_store |
       embed: embed,
@@ -60,21 +59,23 @@ defmodule PollinatrWeb.ChatLive do
   def render(assigns) do
     ~L"""
     <div class="content-body">
-      <div id="chat-messages" phx-update="append">
-        <%= for %{user_id: sender, message: message, index: id} <- @messages do %>
-          <div id="chat-message-<%= id %>">
-            <span><%= sender %>: <%= message %></span>
-          </div>
-        <% end %>
-      </div>
+      <div class="chat-container">
+        <div class="chat-box" id="chat-box" phx-update="append">
+          <%= for %{user_id: sender, message: message, index: id} <- @messages do %>
+            <div id="chat-message-<%= id %>">
+              <span><%= sender %>: <%= message %></span>
+            </div>
+          <% end %>
+        </div>
 
-      <div>
-        <%= m = form_for :send_message, "#", [phx_submit: :save] %>
-          <span>
-            <%= text_input m, :message, [placeholder: "Message", id: :submit_message] %>
-            <%= submit "Send Message" %>
-          </span>
-        </form>
+        <div class="compose-message-box">
+          <%= m = form_for :send_message, "#", [phx_submit: :save] %>
+            <span>
+              <%= text_input m, :message, [placeholder: "Message", id: :submit_message] %>
+              <%= submit "Send Message" %>
+            </span>
+          </form>
+        </div>
       </div>
     </div>
     """
