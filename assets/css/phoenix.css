@@ -165,7 +165,7 @@ button {
   margin:  3rem;
   background-color: rgba(0,0,0,0.85);
   position: relative;
-
+  min-height: calc(100vh - 6rem);
 }
 
 .watch-layout {
