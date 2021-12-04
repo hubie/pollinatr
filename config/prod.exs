@@ -10,8 +10,10 @@ import Config
 # which you should run after static files are built and
 # before starting your production server.
 config :pollinatr, PollinatrWeb.Endpoint,
-  url: [host: "example.com", port: 80],
-  cache_static_manifest: "priv/static/cache_manifest.json"
+  url: [host: "slackies.live", port: 80],
+  cache_static_manifest: "priv/static/cache_manifest.json",
+  force_ssl: [rewrite_on: [:x_forwarded_proto]],
+  check_origin: System.get_env("CHECK_ORIGINS", "localhost,127.0.0.1") |> String.split(",")
 
 # Do not print debug messages in production
 config :logger, level: :info
