@@ -50,6 +50,7 @@ defmodule Pollinatr.MixProject do
       {:gettext, "~> 0.18"},
       {:jason, "~> 1.2"},
 
+      {:gen_smtp, "~>1 .0"},
       {:plug_cowboy, "~> 2.5"},
       {:plug_crypto, "~> 1.0"},
       {:elixir_uuid, "~> 1.2"},

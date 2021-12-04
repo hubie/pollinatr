@@ -18,6 +18,17 @@ config :pollinatr, PollinatrWeb.Endpoint,
 # Do not print debug messages in production
 config :logger, level: :info
 
+config :swoosh, :api_client, Swoosh.ApiClient.Hackney
+
+config :pollinatr, Pollinatr.Helpers.Email,
+  from_address: System.get_env("EMAIL_FROM")
+
+config :pollinatr, Pollinatr.Helpers.Mailer,
+  adapter: Swoosh.Adapters.AmazonSES,
+  region: System.get_env("AWS_SES_REGION"),
+  access_key: System.get_env("AWS_SES_ACCESS_KEY"),
+  secret: System.get_env("AWS_SES_SECRET_KEY")
+
 # ## SSL Support
 #
 # To get SSL working, you will need to add the `https` key
