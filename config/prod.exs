@@ -29,6 +29,14 @@ config :pollinatr, Pollinatr.Helpers.Mailer,
   access_key: System.get_env("AWS_SES_ACCESS_KEY"),
   secret: System.get_env("AWS_SES_SECRET_KEY")
 
+
+config :pollinatr, Pollinatr.Repo,
+  adapter: Ecto.Adapters.Postgres,
+  url: {:system, "DATABASE_URL"},
+  database: "",
+  ssl: true,
+  pool_size: 10
+
 # ## SSL Support
 #
 # To get SSL working, you will need to add the `https` key

@@ -1,0 +1,15 @@
+<div class="unsubscribe container">
+  <div class="unsubscribe title">
+  Unsubscribe failed
+  </div>
+  <div class="unsubscribe content">
+    Unable to process request.  Sorry.  :(
+    <br/>
+    <%= case @reason do %>
+      <% nil -> %>
+
+      <% _ -> %>
+        Error: <%= @reason %>
+    <% end %>
+  </div>
+</div>

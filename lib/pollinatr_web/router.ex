@@ -35,6 +35,8 @@ defmodule PollinatrWeb.Router do
 
     live "/magical-redeemer", Login.TokenRedeemer, :index, as: :redeem
 
+    get "/unsubscribe", UnsubscribeController, :index, as: :unsubscribe
+
     live("/results", Results)
     live("/results/:view", Results)
   end

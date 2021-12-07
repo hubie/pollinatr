@@ -7,8 +7,15 @@
 # General application configuration
 import Config
 
-# config :pollinatr,
-  # ecto_repos: [Pollinatr.Repo]
+config :pollinatr,
+  ecto_repos: [Pollinatr.Repo]
+
+config :pollinatr, Pollinatr.Repo,
+  database: "pollinatr",
+  username: "pollinatr",
+  password: "password",
+  hostname: "127.0.0.1",
+  port: "15432"
 
 # Configures the endpoint
 config :pollinatr, PollinatrWeb.Endpoint,
@@ -17,22 +24,16 @@ config :pollinatr, PollinatrWeb.Endpoint,
   pubsub_server: Pollinatr.PubSub,
   live_view: [signing_salt: System.get_env("LIVEVIEW_SIGNING_SALT")],
   secret_key_base: System.get_env("SECRET_KEY_BASE"),
-
   default_embedded_vote_mode: :vote,
   default_video_provider: System.get_env("DEFAULT_VIDEO_PROVIDER", "streamshark"),
   streamshark_stream_url: System.get_env("STREAMSHARK_STREAM_URL"),
-  aws_ivs_stream_url: System.get_env("AWS_IVS_STREAM_URL")
+  aws_ivs_stream_url: System.get_env("AWS_IVS_STREAM_URL"),
 
-
-config :pollinatr, Pollinatr.Helpers.Email,
-  from_address: System.get_env("EMAIL_FROM")
-
+  unsubscribe_link_lifespan: 90*24*60*60 # 90 days
 
 config :goth, json: System.get_env("GOOGLE_SERVICE_KEY")
 
-config :elixir_google_spreadsheets, :client,
-  request_workers: 20
-
+config :elixir_google_spreadsheets, :client, request_workers: 20
 
 # Configures the mailer
 #
@@ -41,10 +42,19 @@ config :elixir_google_spreadsheets, :client,
 #
 # For production it's recommended to configure a different adapter
 # at the `config/runtime.exs`.
-config :pollinatr, Pollinatr.Helpers.Mailer, adapter: Swoosh.Adapters.Local
+# config :pollinatr, Pollinatr.Helpers.Mailer, adapter: Swoosh.Adapters.Local
 
 # Swoosh API client is needed for adapters other than SMTP.
-config :swoosh, :api_client, false
+config :swoosh, :api_client, Swoosh.ApiClient.Hackney
+
+config :pollinatr, Pollinatr.Helpers.Email,
+  from_address: System.get_env("EMAIL_FROM")
+
+config :pollinatr, Pollinatr.Helpers.Mailer,
+  adapter: Swoosh.Adapters.AmazonSES,
+  region: System.get_env("AWS_SES_REGION"),
+  access_key: System.get_env("AWS_SES_ACCESS_KEY"),
+  secret: System.get_env("AWS_SES_SECRET_KEY")
 
 # Configure esbuild (the version is required)
 config :esbuild,

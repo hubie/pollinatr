@@ -393,6 +393,18 @@ li {
   color: #0069d9;
 }
 
+.unsubscribe.container {
+  text-align: center;
+}
+
+.unsubscribe.title {
+  font-size: 4rem;
+}
+
+.unsubscribe.content {
+
+}
+
 @-webkit-keyframes ellipsis-dot {
       0% { opacity: 0; }
      50% { opacity: 1; }

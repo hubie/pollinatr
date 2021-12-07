@@ -9,7 +9,7 @@ defmodule Pollinatr.Application do
   def start(_type, _args) do
     children = [
       # Start the Ecto repository
-      # Pollinatr.Repo,
+      Pollinatr.Repo,
       # Start the Telemetry supervisor
       PollinatrWeb.Telemetry,
       # Start the PubSub system

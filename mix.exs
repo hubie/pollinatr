@@ -20,7 +20,7 @@ defmodule Pollinatr.MixProject do
   def application do
     [
       mod: {Pollinatr.Application, []},
-      extra_applications: [:logger, :runtime_tools, :elixir_google_spreadsheets]
+      extra_applications: [:logger, :runtime_tools, :elixir_google_spreadsheets, :ex_rated]
     ]
   end
 
@@ -34,9 +34,9 @@ defmodule Pollinatr.MixProject do
   defp deps do
     [
       {:phoenix, "~> 1.6.2"},
-      # {:phoenix_ecto, "~> 4.4"},
-      # {:ecto_sql, "~> 3.6"},
-      # {:postgrex, ">= 0.0.0"},
+      {:phoenix_ecto, "~> 4.4"},
+      {:ecto_sql, "~> 3.6"},
+      {:postgrex, ">= 0.0.0"},
       {:phoenix_html, "~> 3.0"},
       {:phoenix_live_reload, "~> 1.2", only: :dev},
       {:phoenix_live_view, "~> 0.16.0"},
@@ -51,6 +51,7 @@ defmodule Pollinatr.MixProject do
       {:jason, "~> 1.2"},
 
       {:gen_smtp, "~>1 .0"},
+      {:ex_rated, "~> 2.0"},
       {:plug_cowboy, "~> 2.5"},
       {:plug_crypto, "~> 1.0"},
       {:elixir_uuid, "~> 1.2"},

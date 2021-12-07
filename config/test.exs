@@ -6,10 +6,11 @@ import Config
 # to provide built-in test partitioning in CI environment.
 # Run `mix help test` for more information.
 config :pollinatr, Pollinatr.Repo,
-  username: "postgres",
-  password: "postgres",
+  username: "pollinatr",
+  password: "password",
   database: "pollinatr_test#{System.get_env("MIX_TEST_PARTITION")}",
-  hostname: "localhost",
+  hostname: "127.0.0.1",
+  port: "15432"
   pool: Ecto.Adapters.SQL.Sandbox,
   pool_size: 10
 
