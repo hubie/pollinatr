@@ -35,7 +35,7 @@ config :pollinatr, Pollinatr.Repo,
   url: System.get_env("DATABASE_URL"),
   database: "",
   ssl: true,
-  pool_size: System.get_env("DB_POOL_SIZE", "9")
+  pool_size: String.to_integer(System.get_env("DB_POOL_SIZE", "9"))
 
 # ## SSL Support
 #
