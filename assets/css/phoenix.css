@@ -165,7 +165,9 @@ button {
   margin:  3rem;
   background-color: rgba(0,0,0,0.85);
   position: relative;
-  min-height: calc(100vh - 6rem);
+  /*min-height: 40rem;*/
+  align-items: stretch;
+  /*min-height: calc(100vh - 6rem);*/
 }
 
 .watch-layout {
@@ -178,30 +180,52 @@ button {
 
 .watch-container {
   display:  flex;
-  flex: 3 1 120rem;
+  flex: 3 1 100rem;
 
 }
 
 .embed-chat-container {
   display: flex;
-  flex: 1 1 40rem;
+  flex: 1 1 50rem;
+  /*max-width: 40rem;*/
 }
 
 .chat-container {
   display: flex;
   flex-flow: column;
+  max-width: 50rem;
+  height: max(40rem, min(80rem, calc(100vh - 6rem))); /* no less than 40, no more than 60, but whatever fits in the screen otherwise
 }
 .chat-container .chat-box {
   flex: 1;
-  overflow-y: auto;
   color: white;
-  min-height: 40rem;
-  max-height: 60rem;
+/*  min-height: 60rem;
+  max-height: 60rem;*/
 }
 .chat-container .compose-message-box {
-  flex: 1;
+  /*flex: 1;*/
 }
 
+.chat-box {
+  overflow-y: scroll;
+  overscroll-behavior-y: contain;
+  scroll-snap-type: y proximity;
+}
+
+.chat-box > div:last-child {
+  flex: 1;
+  align-items: stretch;
+  scroll-snap-align: end;
+}
+
+.chat-message {
+  padding: .3rem;
+}
+
+.chat-message.sender {
+  font-weight: 500;
+
+}
 
 .embed-vote-container {
   display: flex;
@@ -403,6 +427,44 @@ li {
 
 .unsubscribe.content {
 
+}
+
+
+.send-message-form {
+  /* This bit sets up the horizontal layout */
+  display:flex;
+  flex-direction:row;
+  
+  /* This bit draws the box around it */
+  /*border:1px solid grey;*/
+
+  /* I've used padding so you can see the edges of the elements. */
+  padding:2px;
+  margin-bottom: 0;
+}
+
+.send-message-input input {
+  /* Tell the input to use all the available space */
+  flex-grow:2;
+  /* And hide the input's outline, so the form looks like the outline */
+  border:none;
+  font-size: 1rem;
+}
+
+.send-message-input input:focus {
+  /* removing the input focus blue box. Put this on the form if you like. */
+  outline: none;
+}
+
+.send-message-submit {
+  /* Just a little styling to make it pretty */
+  /*border: 1px solid blue;*/
+  border-color: #F2BC23;
+  background: none;
+  color: #F2BC23;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  margin-bottom: 0rem;
 }
 
 @-webkit-keyframes ellipsis-dot {

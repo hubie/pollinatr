@@ -6,7 +6,7 @@ defmodule PollinatrWeb.WatchController do
       Map.get(
         params,
         "player",
-        Application.get_env(:pollinatr, PollinatrWeb.Endpoint)[:default_video_player]
+        Application.get_env(:pollinatr, PollinatrWeb.Endpoint)[:default_video_provider]
       )
 
     render(conn, "watch.html", player: player)

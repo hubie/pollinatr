@@ -68,18 +68,19 @@ defmodule PollinatrWeb.ChatLive do
       <div class="chat-container">
         <div class="chat-box" id="chat-box" phx-update="append">
           <%= for %{user_id: sender, message: message, index: id} <- @messages do %>
-            <div id="chat-message-<%= id %>">
-              <span><%= sender %>: <%= message %></span>
+            <div class="chat-message" id="chat-message-<%= id %>">
+              <span class="chat-message sender"><%= sender %></span><br/><span class="chat-message message"><%= message %></span>
             </div>
           <% end %>
         </div>
 
         <div class="compose-message-box">
-          <%= m = form_for :send_message, "#", [phx_submit: :save] %>
-            <span>
-              <%= text_input m, :message, [placeholder: "Message", id: :submit_message] %>
-              <%= submit "Send Message" %>
-            </span>
+          <%= m = form_for :send_message, "#", [phx_submit: :save, class: "send-message-form"] %>
+              <%= text_input m, :message, [placeholder: "Message", id: :submit_message, class: "send-message-input"] %>
+              <%= submit [class: "send-message-submit"] do %>
+                <i class="fas fa-paper-plane fa-lg"></i>
+              <% end %>
+
           </form>
         </div>
       </div>

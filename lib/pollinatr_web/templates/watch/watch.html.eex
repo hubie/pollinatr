@@ -31,13 +31,13 @@
           <%# <iframe id="streamshark-videopanel" style="width:100%" onload="iframeLoaded()" src="https://play.streamshark.io/r/e/crrzqgkwy/test-transcode-gvyw3c/embed" frameborder="0" allow="autoplay" allowfullscreen webkitallowfullscreen mozallowfullscreen oallowfullscreen msallowfullscreen > </iframe>       %>
 
         <% "aws_ivs" -> %>
-          <script src="https://player.live-video.net/1.6.1/amazon-ivs-player.min.js"/>
-          <video id="video-player" playsinline></video>
-          <script>
+          <script src="https://player.live-video.net/1.6.1/amazon-ivs-player.min.js"></script>
+          <video width="100%" id="player-video" autoplay playsinline controls></video>
+          <script type="text/javascript">
             if (IVSPlayer.isPlayerSupported) {
               const player = IVSPlayer.create();
-              player.attachHTMLVideoElement(document.getElementById('video-player'));
-              player.load(<%= Application.get_env(:pollinatr, PollinatrWeb.Endpoint)[:aws_ivs_stream_url] %>);
+              player.attachHTMLVideoElement(document.getElementById('player-video'));
+              player.load("<%= Application.get_env(:pollinatr, PollinatrWeb.Endpoint)[:aws_ivs_stream_url] %>");
               player.play();
             }
           </script>
@@ -49,7 +49,8 @@
             if (IVSPlayer.isPlayerSupported) {
               const player = IVSPlayer.create();
               player.attachHTMLVideoElement(document.getElementById('video-player'));
-              player.load("https://db56b4e6eb14.us-west-2.playback.live-video.net/api/video/v1/us-west-2.782786320381.channel.kyYKOxpFsX9D.m3u8");
+              player.load(<%= Application.fetch_env!(:pollinatr, PollinatrWeb.Endpoint)[:aws_ivs_stream_url] %>)
+              // player.load("https://db56b4e6eb14.us-west-2.playback.live-video.net/api/video/v1/us-west-2.782786320381.channel.kyYKOxpFsX9D.m3u8");
               player.play();
             }
           </script>
@@ -59,6 +60,7 @@
       <%= live_render(@conn, PollinatrWeb.ChatLive) %>
     </div>
     <div class="embed-vote-container">
-      <%= live_render(@conn, PollinatrWeb.VoterLive) %>
+          <%= live_render(@conn, PollinatrWeb.VoterLive) %>
     </div>
+
   </div>
