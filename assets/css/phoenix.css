@@ -194,7 +194,7 @@ button {
   display: flex;
   flex-flow: column;
   max-width: 50rem;
-  height: max(40rem, min(80rem, calc(100vh - 6rem))); /* no less than 40, no more than 60, but whatever fits in the screen otherwise
+  height: max(40rem, min(80rem, calc(100vh - 6rem))); /* no less than 40, no more than 60, but whatever fits in the screen otherwise*/
 }
 .chat-container .chat-box {
   flex: 1;
@@ -207,14 +207,14 @@ button {
 }
 
 .chat-box {
+  flex: 1;
+  align-items: stretch;
   overflow-y: scroll;
   overscroll-behavior-y: contain;
   scroll-snap-type: y proximity;
 }
 
 .chat-box > div:last-child {
-  flex: 1;
-  align-items: stretch;
   scroll-snap-align: end;
 }
 
