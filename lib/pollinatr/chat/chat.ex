@@ -5,7 +5,7 @@ defmodule Pollinatr.Chat.Chat do
   @chatTopic "chat"
 
   @initial_state %{
-    messages: [],
+    messages: []
   }
 
   def start_link(args) do
@@ -23,9 +23,9 @@ defmodule Pollinatr.Chat.Chat do
   end
 
   @impl true
-  def handle_cast({:send_message, %Message{} = new_message}, %{messages: messages } = state) do
+  def handle_cast({:send_message, %Message{} = new_message}, %{messages: messages} = state) do
     last_index = List.first(messages, %{index: 0}).index
-    new_message = %{new_message | timestamp: :os.system_time(:millisecond), index: last_index+1}
+    new_message = %{new_message | timestamp: :os.system_time(:millisecond), index: last_index + 1}
     IO.inspect([new_message | messages])
     broadcast_new_message(new_message)
     {:noreply, %{state | messages: [new_message | messages]}}

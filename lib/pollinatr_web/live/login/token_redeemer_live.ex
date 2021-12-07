@@ -25,11 +25,12 @@ defmodule PollinatrWeb.Login.TokenRedeemer do
         insert_session_token(key, current_user.id)
 
         {:ok, push_redirect(socket, to: Map.get(payload, :redirect_to, "/"))}
+
       {:error, _} ->
-        {:ok, socket
-          |> push_redirect(to: Routes.login_path(Endpoint, :index))
-          |> put_flash(:error, "Invalid login token")
-        }
+        {:ok,
+         socket
+         |> push_redirect(to: Routes.login_path(Endpoint, :index))
+         |> put_flash(:error, "Invalid login token")}
     end
   end
 

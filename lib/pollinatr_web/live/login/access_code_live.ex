@@ -46,15 +46,16 @@ defmodule PollinatrWeb.Login.AccessCodeLive do
       ) do
     if Map.get(params, "form_disabled", nil) != "true" do
       IO.inspect(validation_code, label: "VALIDATION_CODE")
-      current_user =
-        Pollinatr.Login.Form.get_user_by_code(validation_code)
-        case current_user do
-          %User{} ->
-            send(self(), {:disable_form, current_user})
-            {:noreply, assign(socket, user_id: current_user.id)}
-          _ ->
-            {:noreply, put_flash(socket, :error, "invalid code")}
-        end
+      current_user = Pollinatr.Login.Form.get_user_by_code(validation_code)
+
+      case current_user do
+        %User{} ->
+          send(self(), {:disable_form, current_user})
+          {:noreply, assign(socket, user_id: current_user.id)}
+
+        _ ->
+          {:noreply, put_flash(socket, :error, "invalid code")}
+      end
     else
       {:noreply, socket}
     end
@@ -70,6 +71,7 @@ defmodule PollinatrWeb.Login.AccessCodeLive do
         insert_session_token(key, user_id)
         redirect = socket |> redirect(to: return_to)
         {:noreply, redirect}
+
       _ ->
         {:noreply, socket}
     end

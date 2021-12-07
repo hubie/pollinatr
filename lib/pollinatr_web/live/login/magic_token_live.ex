@@ -42,19 +42,24 @@ defmodule PollinatrWeb.Login.MagicTokenLive do
         %{"user" => %{"email_address" => email_address} = params},
         %{assigns: %{:return_to => return_to}} = socket
       ) do
-
     if Map.get(params, "form_disabled", nil) != "true" do
       case should_email(%{email_address: email_address}) do
         true ->
-          Pollinatr.Helpers.Email.login_email(%{to: email_address, redirect_to: return_to  || "/"})
-            |> Pollinatr.Helpers.Mailer.deliver()
-          socket = socket
+          Pollinatr.Helpers.Email.login_email(%{to: email_address, redirect_to: return_to || "/"})
+          |> Pollinatr.Helpers.Mailer.deliver()
+
+          socket =
+            socket
             |> put_flash(:info, "Email sent to " <> email_address)
             |> assign(email_sent: true)
+
           {:noreply, socket}
+
         false ->
           {:noreply, put_flash(socket, :error, "Unsubscribed")}
-        {:error, _} -> socket = socket |> put_flash(:error, "Too many attempts")
+
+        {:error, _} ->
+          socket = socket |> put_flash(:error, "Too many attempts")
           {:noreply, socket}
       end
     else
@@ -64,12 +69,15 @@ defmodule PollinatrWeb.Login.MagicTokenLive do
 
   defp should_email(%{email_address: email_address}) do
     cond do
-      Pollinatr.Models.EmailingList.email_allowed(%{list_name: "login", address: email_address}) == false ->
+      Pollinatr.Models.EmailingList.email_allowed(%{list_name: "login", address: email_address}) ==
+          false ->
         false
+
       {:ok, _} = ExRated.check_rate("magic_token_login_" <> email_address, 1_440_000, 2) ->
         true
+
       true ->
-          false
+        false
     end
   end
 end

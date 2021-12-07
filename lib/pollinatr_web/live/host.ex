@@ -15,7 +15,7 @@ defmodule PollinatrWeb.Host do
     results: nil,
     online_voters: 0,
     show_mode: nil,
-    message: nil,
+    message: nil
   }
 
   def subscribe do
@@ -30,12 +30,15 @@ defmodule PollinatrWeb.Host do
 
     %{show_mode: show_mode, message: message} = GenServer.call(Results, :get_show_state)
 
-    state = %{@initial_store | results: Results.get_current_results(),
-                               online_voters: Results.get_current_voter_count(),
-                               show_mode: show_mode,
-                               message: message,
-                               questions: GenServer.call(Questions, :get_questions)
-                             }
+    state = %{
+      @initial_store
+      | results: Results.get_current_results(),
+        online_voters: Results.get_current_voter_count(),
+        show_mode: show_mode,
+        message: message,
+        questions: GenServer.call(Questions, :get_questions)
+    }
+
     {:ok, assign(socket, state)}
   end
 
@@ -48,7 +51,8 @@ defmodule PollinatrWeb.Host do
   end
 
   def handle_info({Results, %{show_mode: mode}}, state) do
-    new_state = state
+    new_state =
+      state
       |> update(:show_mode, fn _ -> mode end)
 
     {:noreply, new_state}

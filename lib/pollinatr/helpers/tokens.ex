@@ -1,5 +1,6 @@
 defmodule Pollinatr.Helpers.Tokens do
-  @default_ttl 1 * 60 * 60 # 1 hour
+  # 1 hour
+  @default_ttl 1 * 60 * 60
 
   def encrypt(context, data) do
     Plug.Crypto.encrypt(secret(), to_string(context), data)
@@ -12,4 +13,3 @@ defmodule Pollinatr.Helpers.Tokens do
 
   defp secret, do: PollinatrWeb.Endpoint.config(:secret_key_base)
 end
-

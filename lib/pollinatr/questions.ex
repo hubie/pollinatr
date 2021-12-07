@@ -33,10 +33,11 @@ defmodule Pollinatr.Questions do
 
   defp load_questions() do
     "questions.json"
-      |> File.read!
-      |> Jason.decode!(keys: :atoms)
-      |> Enum.with_index()
-      |> Enum.map(fn {q, i} -> Map.put(q, :id, Map.get(q, :id, :crypto.hash(:md5, "#{i}") |> Base.encode16() )) end)
+    |> File.read!()
+    |> Jason.decode!(keys: :atoms)
+    |> Enum.with_index()
+    |> Enum.map(fn {q, i} ->
+      Map.put(q, :id, Map.get(q, :id, :crypto.hash(:md5, "#{i}") |> Base.encode16()))
+    end)
   end
-
 end

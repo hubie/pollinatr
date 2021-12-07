@@ -10,7 +10,7 @@ config :pollinatr, Pollinatr.Repo,
   password: "password",
   database: "pollinatr_test#{System.get_env("MIX_TEST_PARTITION")}",
   hostname: "127.0.0.1",
-  port: "15432"
+  port: "15432",
   pool: Ecto.Adapters.SQL.Sandbox,
   pool_size: 10
 

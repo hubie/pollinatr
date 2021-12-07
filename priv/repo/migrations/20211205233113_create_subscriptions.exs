@@ -10,7 +10,10 @@ defmodule Pollinatr.Repo.Migrations.CreateEmailSubscriptions do
       timestamps()
     end
 
-    create unique_index(:email_subscriptions, [:emailing_list_id, :email], name: :email_subscriptions_emailing_list_id_email_index)
+    create unique_index(:email_subscriptions, [:emailing_list_id, :email],
+             name: :email_subscriptions_emailing_list_id_email_index
+           )
+
     create index(:email_subscriptions, [:email])
   end
 end

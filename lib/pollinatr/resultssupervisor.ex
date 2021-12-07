@@ -11,6 +11,7 @@ defmodule Pollinatr.ResultsSupervisor do
       {Pollinatr.Results, [name: Pollinatr.Results]},
       {Pollinatr.Metrics, [name: Pollinatr.Metrics]}
     ]
+
     Supervisor.init(children, strategy: :one_for_one)
   end
 end

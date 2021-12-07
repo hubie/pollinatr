@@ -8,8 +8,9 @@ defmodule Pollinatr.Chat.Supervisor do
   @impl true
   def init(:ok) do
     children = [
-      {Pollinatr.Chat.Chat, [name: Pollinatr.Chat.Chat]},
+      {Pollinatr.Chat.Chat, [name: Pollinatr.Chat.Chat]}
     ]
+
     Supervisor.init(children, strategy: :one_for_one)
   end
 end

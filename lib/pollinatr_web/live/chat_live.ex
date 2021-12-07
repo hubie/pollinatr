@@ -20,11 +20,11 @@ defmodule PollinatrWeb.ChatLive do
     embed: false,
     session_id: nil,
     user_id: nil,
-    messages: [],
+    messages: []
   }
 
-  def mount(:not_mounted_at_router, session, socket ) do
-    mount(%{"embed": "true"}, session, socket)
+  def mount(:not_mounted_at_router, session, socket) do
+    mount(%{embed: "true"}, session, socket)
   end
 
   def mount(params, %{"session_uuid" => key, "user_id" => user_id} = _session, socket) do
@@ -38,17 +38,23 @@ defmodule PollinatrWeb.ChatLive do
     # )
     embed = Map.get(params, "embed", "false")
 
-    {:ok, assign(socket, %{@initial_store |
-      embed: embed,
-      session_id: key,
-      user_id: user_id,
-      messages: Enum.reverse(Chat.get_recent_messages()),
-      }), temporary_assigns: [messages:  []]
-    }
+    {:ok,
+     assign(socket, %{
+       @initial_store
+       | embed: embed,
+         session_id: key,
+         user_id: user_id,
+         messages: Enum.reverse(Chat.get_recent_messages())
+     }), temporary_assigns: [messages: []]}
   end
 
   def handle_event("save", %{"send_message" => %{"message" => message}}, socket) do
-    Chat.send_message(%Message{message: message, session_id: socket.assigns.session_id, user_id: socket.assigns.user_id})
+    Chat.send_message(%Message{
+      message: message,
+      session_id: socket.assigns.session_id,
+      user_id: socket.assigns.user_id
+    })
+
     {:noreply, socket}
   end
 

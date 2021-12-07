@@ -37,5 +37,4 @@ defmodule PollinatrWeb.Components.VoteComponent do
 
     """
   end
-
 end

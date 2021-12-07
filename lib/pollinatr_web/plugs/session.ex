@@ -3,18 +3,19 @@ defmodule PollinatrWeb.Plug.Session do
   import Phoenix.Controller, only: [redirect: 2, put_flash: 3]
   import PollinatrWeb.Live.Helper, only: [signing_salt: 0]
 
-
   def redirect_unauthorized(conn, [resource: resource] = _opts) do
     user_id = Map.get(conn.assigns, :user_id)
+
     case Bodyguard.permit(Pollinatr.User, resource, %{user_id: user_id}) do
       :ok ->
         conn
+
       _ ->
         conn
-          |> put_flash(:info, "Unauthorized")
-          |> put_session(:return_to, conn.request_path)
-          |> redirect(to: PollinatrWeb.Router.Helpers.login_path(conn, :index))
-          |> halt()
+        |> put_flash(:info, "Unauthorized")
+        |> put_session(:return_to, conn.request_path)
+        |> redirect(to: PollinatrWeb.Router.Helpers.login_path(conn, :index))
+        |> halt()
     end
   end
 
@@ -33,16 +34,16 @@ defmodule PollinatrWeb.Plug.Session do
   def validate_session_token(conn, session_uuid) do
     case :ets.lookup(:auth_table, :"#{session_uuid}") do
       [{_, token}] ->
-        case Phoenix.Token.verify(PollinatrWeb.Endpoint, signing_salt(), token,
-               max_age: 806_400
-             ) do
+        case Phoenix.Token.verify(PollinatrWeb.Endpoint, signing_salt(), token, max_age: 806_400) do
           {:ok, user_id} ->
             conn
-              |> assign(:user_id, user_id)
-              |> put_session("user_id", user_id)
+            |> assign(:user_id, user_id)
+            |> put_session("user_id", user_id)
+
           _ ->
             conn
         end
+
       _ ->
         conn
     end

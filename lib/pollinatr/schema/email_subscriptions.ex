@@ -15,6 +15,8 @@ defmodule Pollinatr.Schema.EmailSubscriptions do
     blocked_email
     |> cast(attrs, [:email, :emailing_list_id, :tenant])
     |> validate_required([:email, :emailing_list_id])
-    |> unique_constraint(:email_emailing_list_id, name: :email_subscriptions_emailing_list_id_email_index)
+    |> unique_constraint(:email_emailing_list_id,
+      name: :email_subscriptions_emailing_list_id_email_index
+    )
   end
 end

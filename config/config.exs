@@ -28,8 +28,8 @@ config :pollinatr, PollinatrWeb.Endpoint,
   default_video_provider: System.get_env("DEFAULT_VIDEO_PROVIDER", "streamshark"),
   streamshark_stream_url: System.get_env("STREAMSHARK_STREAM_URL"),
   aws_ivs_stream_url: System.get_env("AWS_IVS_STREAM_URL"),
-
-  unsubscribe_link_lifespan: 90*24*60*60 # 90 days
+  # 90 days
+  unsubscribe_link_lifespan: 90 * 24 * 60 * 60
 
 config :goth, json: System.get_env("GOOGLE_SERVICE_KEY")
 
@@ -47,8 +47,7 @@ config :elixir_google_spreadsheets, :client, request_workers: 20
 # Swoosh API client is needed for adapters other than SMTP.
 config :swoosh, :api_client, Swoosh.ApiClient.Hackney
 
-config :pollinatr, Pollinatr.Helpers.Email,
-  from_address: System.get_env("EMAIL_FROM")
+config :pollinatr, Pollinatr.Helpers.Email, from_address: System.get_env("EMAIL_FROM")
 
 config :pollinatr, Pollinatr.Helpers.Mailer,
   adapter: Swoosh.Adapters.AmazonSES,

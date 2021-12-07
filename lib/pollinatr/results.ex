@@ -27,13 +27,16 @@ defmodule Pollinatr.Results do
 
   @impl true
   def init(_state) do
-    state = case GSS.Spreadsheet.Supervisor.spreadsheet(System.get_env("VOTE_ARCHIVE_SHEET_ID", "")) do
-      {:ok, pid} ->
-        %{@initial_state | gsheet_archive_pid: pid}
-      e ->
-        IO.inspect(["Error initializing Archive Google Sheet, going without it", e])
-        @initial_state
-    end
+    state =
+      case GSS.Spreadsheet.Supervisor.spreadsheet(System.get_env("VOTE_ARCHIVE_SHEET_ID", "")) do
+        {:ok, pid} ->
+          %{@initial_state | gsheet_archive_pid: pid}
+
+        e ->
+          IO.inspect(["Error initializing Archive Google Sheet, going without it", e])
+          @initial_state
+      end
+
     {:ok, state}
   end
 
@@ -82,27 +85,34 @@ defmodule Pollinatr.Results do
   @impl true
   def handle_call(%{voter_id: voter_id, vote_cast: _} = ballot, _from, state) do
     votes_for_voter = get_vote_count_for_voter(voter_id, state)
+
     cond do
       votes_for_voter < @max_votes ->
         new_state = tally_vote(ballot, state)
         broadcast_results(state.question, new_state.results)
+
         if votes_for_voter + 1 < @max_votes do
           {:reply, %{voter_state: :new_question}, new_state}
         else
           {:reply, %{voter_state: :voted}, new_state}
         end
-      true -> {:reply, %{voter_state: :voted}, state}
+
+      true ->
+        {:reply, %{voter_state: :voted}, state}
     end
   end
 
   @impl true
   def handle_call(%{get_voter_state: voter_id}, _from, state) do
     vote_count = get_vote_count_for_voter(voter_id, state)
-    voter_state = cond do
-      %{} == state.question -> :voting_closed
-      vote_count >= @max_votes -> :voted
-      true -> :new_question
-    end
+
+    voter_state =
+      cond do
+        %{} == state.question -> :voting_closed
+        vote_count >= @max_votes -> :voted
+        true -> :new_question
+      end
+
     {:reply, voter_state, state}
   end
 
@@ -115,7 +125,6 @@ defmodule Pollinatr.Results do
   def handle_call(:get_show_state, _from, state) do
     {:reply, %{show_mode: state.show_mode, message: state.message}, state}
   end
-
 
   @impl true
   def handle_call(:get_current_question, _from, state) do
@@ -136,25 +145,43 @@ defmodule Pollinatr.Results do
   end
 
   defp get_vote_count_for_voter(voter_id, state) do
-    (get_in(state, [:ballots, voter_id]) || []) |> Enum.count
+    (get_in(state, [:ballots, voter_id]) || []) |> Enum.count()
   end
 
   defp tally_vote(%{voter_id: voter_id, vote_cast: vote}, state) do
-    new_results = Enum.map(state.results, fn x -> if Map.has_key?(x, vote), do: %{vote => x[vote] + 1}, else: x end)
-    {_, new_ballots} = Map.get_and_update(state.ballots, voter_id, fn current_value -> {current_value, (current_value || []) ++ [vote]} end)
+    new_results =
+      Enum.map(state.results, fn x ->
+        if Map.has_key?(x, vote), do: %{vote => x[vote] + 1}, else: x
+      end)
+
+    {_, new_ballots} =
+      Map.get_and_update(state.ballots, voter_id, fn current_value ->
+        {current_value, (current_value || []) ++ [vote]}
+      end)
+
     new_state = %{state | results: new_results, ballots: new_ballots}
     new_state
   end
 
-  defp archive_results(%{results: results, question: %{question: question, id: id}, archived_results: archived_results, gsheet_archive_pid: pid} = state) do
+  defp archive_results(
+         %{
+           results: results,
+           question: %{question: question, id: id},
+           archived_results: archived_results,
+           gsheet_archive_pid: pid
+         } = state
+       ) do
     new_archive = Map.put(archived_results, id, %{results: results, question: question})
 
     time = DateTime.now("Etc/UTC") |> elem(1) |> to_string
-    stripped_results = for rs <- results, {a, v} <- rs do
-      [a,v]
-    end |> List.flatten
 
-    gsrow = [time, question]++stripped_results
+    stripped_results =
+      for rs <- results, {a, v} <- rs do
+        [a, v]
+      end
+      |> List.flatten()
+
+    gsrow = [time, question] ++ stripped_results
     IO.inspect(gsrow, label: "Writing Google Sheet Row")
     GSS.Spreadsheet.append_row(pid, 1, gsrow)
 

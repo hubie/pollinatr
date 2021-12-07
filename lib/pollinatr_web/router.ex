@@ -10,7 +10,9 @@ defmodule PollinatrWeb.Router do
     plug :protect_from_forgery
     plug :put_secure_browser_headers
     plug :validate_session
-    plug CORSPlug, origin: System.get_env("ALLOWED_ORIGINS", "localhost,127.0.0.1") |> String.split(",")
+
+    plug CORSPlug,
+      origin: System.get_env("ALLOWED_ORIGINS", "localhost,127.0.0.1") |> String.split(",")
   end
 
   pipeline :api do
@@ -24,7 +26,6 @@ defmodule PollinatrWeb.Router do
   pipeline :admin do
     plug :redirect_unauthorized, resource: :admin
   end
-
 
   scope "/", PollinatrWeb do
     pipe_through :browser

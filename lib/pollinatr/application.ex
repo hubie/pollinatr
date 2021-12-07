@@ -21,8 +21,7 @@ defmodule Pollinatr.Application do
       Pollinatr.Presence,
       {Pollinatr.ResultsSupervisor, [name: Pollinatr.ResultsSupervisor]},
       {Pollinatr.Chat.Supervisor, [name: Pollinatr.Chat.Supervisor]},
-      {Pollinatr.Questions, [name: Pollinatr.Questions]},
-
+      {Pollinatr.Questions, [name: Pollinatr.Questions]}
     ]
 
     :ets.new(:auth_table, [:set, :public, :named_table, read_concurrency: true])
