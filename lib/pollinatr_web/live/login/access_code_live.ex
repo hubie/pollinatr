@@ -48,8 +48,13 @@ defmodule PollinatrWeb.Login.AccessCodeLive do
       IO.inspect(validation_code, label: "VALIDATION_CODE")
       current_user =
         Pollinatr.Login.Form.get_user_by_code(validation_code)
-      send(self(), {:disable_form, current_user})
-      {:noreply, assign(socket, user_id: current_user.id)}
+        case current_user do
+          %User{} ->
+            send(self(), {:disable_form, current_user})
+            {:noreply, assign(socket, user_id: current_user.id)}
+          _ ->
+            {:noreply, put_flash(socket, :error, "invalid code")}
+        end
     else
       {:noreply, socket}
     end
