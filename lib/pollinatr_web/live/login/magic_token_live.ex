@@ -1,33 +1,35 @@
 defmodule PollinatrWeb.Login.MagicTokenLive do
   use PollinatrWeb, :live_view
+  use Phoenix.LiveView, container: {:div, class: "flex-enabled-liveview"}
   alias PollinatrWeb.LayoutView
   import Phoenix.HTML.Form
 
   @impl true
   def render(assigns) do
     ~L"""
-      <div class="login header">
-        Welcome to the Slackies
+      <div class="login-container">
+        <div class="login header">
+          Welcome to the Slackies
+        </div>
+        <%= if @email_sent != true do %>
+          <div class="login-box-container">
+            <%= form_for :user, "#", [phx_submit: :save, autocomplete: "off", autocorrect: "off", autocapitalize: "off", spellcheck: "false"], fn f -> %>
+              <fieldset class="flex flex-col md:w-full">
+
+                <div>
+                  <label class="login access-code-label" for="form_email">Enter Email Address:</label>
+                  <%= email_input f, :email_address, [class: "login password-box focus:border focus:border-b-0 rounded border", placeholder: "Email", aria_required: "true"] %>
+                  <%= submit "Submit" %>
+                </div>
+              </fieldset>
+            <% end %>
+          </div>
+        <% else %>
+          <div class="email-sent-container">
+            Check your email for login links!
+          </div>
+        <% end %>
       </div>
-      <%= if @email_sent != true do %>
-        <div class="login-box-container">
-          <%= form_for :user, "#", [phx_submit: :save, autocomplete: "off", autocorrect: "off", autocapitalize: "off", spellcheck: "false"], fn f -> %>
-            <fieldset class="flex flex-col md:w-full">
-
-              <div>
-                <label class="login access-code-label" for="form_email">Enter Email Address:</label>
-                <%= email_input f, :email_address, [class: "login password-box focus:border focus:border-b-0 rounded border", placeholder: "Email", aria_required: "true"] %>
-                <%= submit "Submit" %>
-              </div>
-            </fieldset>
-          <% end %>
-        </div>
-      <% else %>
-        <div class="email-sent-container">
-          Check your email for login links!
-        </div>
-      <% end %>
-
     """
   end
 

@@ -164,6 +164,7 @@ button {
 .content-body {
   display: flex;
   flex-grow: 1;
+  align-content: center;
   margin:  3rem;
   background-color: rgba(0,0,0,0.85);
   position: relative;
@@ -208,6 +209,7 @@ button {
   flex: 1;
   align-items: stretch;
   overflow-y: scroll;
+  min-height: 60rem;
   max-height: min(80rem, calc(100vh - 6rem));
   overscroll-behavior-y: contain;
   scroll-snap-type: y proximity;
@@ -230,6 +232,15 @@ button {
   display: flex;
   width:  50%;
   flex: 1 1 auto;
+}
+
+.flex-enabled-liveview {
+  display: flex;
+  flex: 1;
+}
+
+.login-container {
+  flex: 1;
 }
 
 li {

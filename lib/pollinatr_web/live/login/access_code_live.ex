@@ -1,5 +1,6 @@
 defmodule PollinatrWeb.Login.AccessCodeLive do
   use PollinatrWeb, :live_view
+  use Phoenix.LiveView, container: {:div, class: "flex-enabled-liveview"}
   alias PollinatrWeb.LayoutView
   import Phoenix.HTML.Form
   import PollinatrWeb.Live.Helper, only: [signing_salt: 0]
@@ -9,6 +10,7 @@ defmodule PollinatrWeb.Login.AccessCodeLive do
   @impl true
   def render(assigns) do
     ~L"""
+      <div class="login-container">
         <div class="login header">
           Welcome to the Slackies
         </div>
@@ -24,7 +26,7 @@ defmodule PollinatrWeb.Login.AccessCodeLive do
             </fieldset>
           <% end %>
         </div>
-    </div>
+      </div>
     """
   end
 
