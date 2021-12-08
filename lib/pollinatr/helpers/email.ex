@@ -28,16 +28,22 @@ defmodule Pollinatr.Helpers.Email do
   end
 
   defp generateLoginLink(payload) do
-    PollinatrWeb.Endpoint.url() <>
+    getBaseUrl() <>
       Routes.redeem_path(PollinatrWeb.Endpoint, :index) <>
       "?" <>
       "token=" <> Pollinatr.Helpers.Tokens.encrypt(:magic_token, payload)
   end
 
   defp generateUnsubscribeLink(payload) do
-    PollinatrWeb.Endpoint.url() <>
+    getBaseUrl() <>
       Routes.unsubscribe_path(PollinatrWeb.Endpoint, :index) <>
       "?" <>
       "token=" <> Pollinatr.Helpers.Tokens.encrypt(:magic_token, payload)
+  end
+
+  defp getBaseUrl() do
+    Application.fetch_env!(:pollinatr, PollinatrWeb.Endpoint)[:scheme] <>
+      "://" <>
+      Application.fetch_env!(:pollinatr, PollinatrWeb.Endpoint)[:host]
   end
 end

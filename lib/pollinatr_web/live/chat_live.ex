@@ -55,7 +55,7 @@ defmodule PollinatrWeb.ChatLive do
       user_id: socket.assigns.user_id
     })
 
-    {:noreply, socket}
+    {:noreply, assign(socket, message: nil)}
   end
 
   def handle_info({Chat, {:new_message, message}}, socket) do
@@ -76,7 +76,7 @@ defmodule PollinatrWeb.ChatLive do
 
         <div class="compose-message-box">
           <%= m = form_for :send_message, "#", [phx_submit: :save, class: "send-message-form"] %>
-              <%= text_input m, :message, [placeholder: "Message", id: :submit_message, class: "send-message-input"] %>
+              <%= text_input m, :message, [placeholder: "Message", id: :submit_message, class: "send-message-input", phx_hook: "MessageSubmit"] %>
               <%= submit [class: "send-message-submit"] do %>
                 <i class="fas fa-paper-plane fa-lg"></i>
               <% end %>

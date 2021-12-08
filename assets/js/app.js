@@ -41,6 +41,11 @@ function updateTimerValue() {
 }
 
 let Hooks = {}
+Hooks.MessageSubmit = {
+  updated(){
+    this.el.value = "";
+  }
+}
 Hooks.Timer = {
 
   mounted() {
