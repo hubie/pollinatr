@@ -5,7 +5,7 @@ defmodule PollinatrWeb.Login.AccessCodeLive do
   import Phoenix.HTML.Form
   import PollinatrWeb.Live.Helper, only: [signing_salt: 0]
 
-  alias Pollinatr.User
+  alias Pollinatr.Models.User
 
   @impl true
   def render(assigns) do

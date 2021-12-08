@@ -6,7 +6,7 @@ defmodule PollinatrWeb.Login.TokenRedeemer do
   alias Pollinatr.Helpers.Tokens
   alias PollinatrWeb.Router.Helpers, as: Routes
   alias PollinatrWeb.Endpoint
-  alias Pollinatr.User
+  alias Pollinatr.Models.User
 
   @impl true
   def render(assigns) do
@@ -21,7 +21,15 @@ defmodule PollinatrWeb.Login.TokenRedeemer do
   def mount(params, %{"session_uuid" => key} = _session, socket) do
     case Tokens.decrypt(:magic_token, params["token"] || "") do
       {:ok, %{email_address: email_address} = payload} ->
-        current_user = User.get_user(%{email_address: email_address})
+        IO.inspect(payload, label: "PAYLOAD")
+
+        current_user =
+          User.find_or_create_user(%{
+            email_address: email_address,
+            nickname: get_in(payload, [:nickname]),
+            role: :voter
+          })
+
         insert_session_token(key, current_user.id)
 
         {:ok, push_redirect(socket, to: Map.get(payload, :redirect_to, "/"))}

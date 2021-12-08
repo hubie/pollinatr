@@ -38,15 +38,16 @@ defmodule PollinatrWeb.ChatLive do
     #   %{}
     # )
     embed = Map.get(params, "embed", "false")
-    user = Pollinatr.User.get_user(%{user_id: user_id})
+    user = Pollinatr.Models.User.get_user(%{user_id: user_id})
 
     {:ok,
      assign(socket, %{
        @initial_store
        | embed: embed,
          session_id: key,
-         user_id: user_id,
-         nickname: if(user.role == :admin, do: "Admin", else: user.email_address),
+         user_id: if(user.role == :admin, do: "Admin", else: user.email_address),
+         nickname:
+           if(user.role == :admin, do: "Admin", else: user.nickname || user.email_address),
          messages: Enum.reverse(Chat.get_recent_messages())
      }), temporary_assigns: [messages: []]}
   end

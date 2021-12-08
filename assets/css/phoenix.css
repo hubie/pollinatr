@@ -225,7 +225,7 @@ button {
 
 .chat-message.sender {
   font-weight: 500;
-
+  color: #F2BC23;
 }
 
 .embed-vote-container {

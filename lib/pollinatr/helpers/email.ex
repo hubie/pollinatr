@@ -2,19 +2,21 @@ defmodule Pollinatr.Helpers.Email do
   alias PollinatrWeb.Router.Helpers, as: Routes
   use Phoenix.Swoosh, view: PollinatrWeb.EmailView, layout: {PollinatrWeb.LayoutView, :email}
 
-  def login_email(%{to: to, redirect_to: redirect_to} = args) do
+  def login_email(%{to: to, redirect_to: redirect_to, nickname: nickname} = args) do
     template_params = %{
       title: "Login Link",
       tenant_name: "The Slackies",
       watch_login_link:
         generateLoginLink(%{
           redirect_to: Routes.watch_path(PollinatrWeb.Endpoint, :index),
-          email_address: to
+          email_address: to,
+          nickname: nickname
         }),
       vote_login_link:
         generateLoginLink(%{
           redirect_to: Routes.vote_path(PollinatrWeb.Endpoint, :index),
-          email_address: to
+          email_address: to,
+          nickname: nickname
         }),
       unsubscribe_link: generateUnsubscribeLink(%{email_address: to, list_name: "login"})
     }

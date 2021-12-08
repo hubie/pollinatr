@@ -6,7 +6,7 @@ defmodule PollinatrWeb.Plug.Session do
   def redirect_unauthorized(conn, [resource: resource] = _opts) do
     user_id = Map.get(conn.assigns, :user_id)
 
-    case Bodyguard.permit(Pollinatr.User, resource, %{user_id: user_id}) do
+    case Bodyguard.permit(Pollinatr.Models.User, resource, %{user_id: user_id}) do
       :ok ->
         conn
 

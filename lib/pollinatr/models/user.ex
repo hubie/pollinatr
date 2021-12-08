@@ -1,5 +1,8 @@
-defmodule Pollinatr.User do
+defmodule Pollinatr.Models.User do
   @behaviour Bodyguard.Policy
+  import Ecto.Query
+  alias Pollinatr.Schema.User, as: UserSchema
+  alias Pollinatr.Repo
 
   defstruct validation_code: nil, id: nil, role: nil, email_address: nil
 
@@ -7,19 +10,40 @@ defmodule Pollinatr.User do
   @admin_codes [System.get_env("ADMIN_LOGIN_CODE")]
   @refresh_period 120
 
-  def get_user(%{user_id: user_id}) do
-    case :ets.lookup(:users, :"#{user_id}") do
-      [{_id, user}] ->
-        user
+  def get_user(%{user_id: nil} = params) do
+    IO.inspect(params, label: "NO USER_ID PROVIDED")
+    nil
+  end
 
-      nope ->
-        IO.inspect(nope, label: "USER NOT FOUND")
+  def get_user(%{user_id: user_id}) do
+    result = Repo.one(from u in UserSchema, where: u.id == ^user_id, select: u)
+    IO.inspect(result, label: "RESULT")
+
+    case result do
+      nil ->
+        IO.inspect(user_id, label: "USER_ID NOT FOUND")
+        nil
+
+      user ->
+        user
     end
   end
 
-  def get_user(%{email_address: email_address}) do
-    IO.inspect("CREATED NEW USER")
-    new_user(%{email_address: email_address, role: :voter})
+  def create_user(%Ecto.Changeset{} = new_user) do
+    IO.inspect(new_user, label: "UPSERTING NEW USER")
+
+    {:ok, user} =
+      Repo.insert_or_update(new_user,
+        conflict_target: :email_address,
+        on_conflict: {:replace_all_except, [:id, :email_address]}
+      )
+
+    IO.inspect(user)
+    user
+  end
+
+  def find_or_create_user(%{} = new_user) do
+    make_changeset(new_user) |> create_user()
   end
 
   def get_user(%{validation_code: validation_code} = user) do
@@ -68,16 +92,17 @@ defmodule Pollinatr.User do
   end
 
   defp new_user(%{validation_code: code, role: role}) do
-    save_user(%__MODULE__{id: "code_" <> code, role: role, validation_code: code})
+    # make_changeset(%__MODULE__{id: "code_" <> code, role: role, validation_code: code})
+    # |> create_user()
   end
 
   defp new_user(%{email_address: email, role: role}) do
-    save_user(%__MODULE__{id: "email_" <> email, role: role, email_address: email})
+    make_changeset(%{id: "email_" <> email, role: role, email_address: email})
+    |> create_user()
   end
 
-  defp save_user(%{id: user_id} = user) do
-    :ets.insert(:users, {:"#{user_id}", user})
-    user
+  defp make_changeset(%{role: role} = user) do
+    changeset = UserSchema.changeset(%UserSchema{}, user)
   end
 
   defp refresh_voter_codes() do
@@ -119,8 +144,8 @@ defmodule Pollinatr.User do
     end
   end
 
-  def authorize(_, %__MODULE__{role: :admin}, _), do: true
-  def authorize(:voter, %__MODULE__{role: :voter}, _), do: true
+  def authorize(_, %UserSchema{role: :admin}, _), do: true
+  def authorize(:voter, %UserSchema{role: :voter}, _), do: true
 
   def authorize(action, %{user_id: user_id}, params),
     do: authorize(action, get_user(%{user_id: user_id}), params)
