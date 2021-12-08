@@ -42,8 +42,8 @@ defmodule Pollinatr.Helpers.Email do
   end
 
   defp getBaseUrl() do
-    Application.fetch_env!(:pollinatr, PollinatrWeb.Endpoint)[:scheme] <>
+    Application.fetch_env!(:pollinatr, PollinatrWeb.Endpoint)[:url][:scheme] <>
       "://" <>
-      Application.fetch_env!(:pollinatr, PollinatrWeb.Endpoint)[:host]
+      Application.fetch_env!(:pollinatr, PollinatrWeb.Endpoint)[:url][:host]
   end
 end
