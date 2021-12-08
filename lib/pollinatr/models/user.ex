@@ -35,7 +35,7 @@ defmodule Pollinatr.Models.User do
     {:ok, user} =
       Repo.insert_or_update(new_user,
         conflict_target: :email_address,
-        on_conflict: {:replace_all_except, [:id, :email_address]}
+        on_conflict: {:replace_all_except, [:id, :email_address, :role]}
       )
 
     IO.inspect(user)
