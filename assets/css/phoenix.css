@@ -466,7 +466,6 @@ li {
   /*align-content: stretch;*/
   /* And hide the input's outline, so the form looks like the outline */
   border:none;
-  color:  green;
   font-size: 1.5rem;
 }
 
