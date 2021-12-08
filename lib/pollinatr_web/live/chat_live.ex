@@ -20,7 +20,8 @@ defmodule PollinatrWeb.ChatLive do
     embed: false,
     session_id: nil,
     user_id: nil,
-    messages: []
+    messages: [],
+    nickname: nil
   }
 
   def mount(:not_mounted_at_router, session, socket) do
@@ -37,6 +38,7 @@ defmodule PollinatrWeb.ChatLive do
     #   %{}
     # )
     embed = Map.get(params, "embed", "false")
+    user = Pollinatr.User.get_user(%{user_id: user_id})
 
     {:ok,
      assign(socket, %{
@@ -44,6 +46,7 @@ defmodule PollinatrWeb.ChatLive do
        | embed: embed,
          session_id: key,
          user_id: user_id,
+         nickname: if(user.role == :admin, do: "Admin", else: user.email_address),
          messages: Enum.reverse(Chat.get_recent_messages())
      }), temporary_assigns: [messages: []]}
   end
@@ -52,7 +55,8 @@ defmodule PollinatrWeb.ChatLive do
     Chat.send_message(%Message{
       message: message,
       session_id: socket.assigns.session_id,
-      user_id: socket.assigns.user_id
+      user_id: socket.assigns.user_id,
+      nickname: socket.assigns.nickname
     })
 
     {:noreply, assign(socket, message: nil)}
@@ -67,9 +71,9 @@ defmodule PollinatrWeb.ChatLive do
     <div class="content-body">
       <div class="chat-container">
         <div class="chat-box" id="chat-box" phx-update="append">
-          <%= for %{user_id: sender, message: message, index: id} <- @messages do %>
+          <%= for %{user_id: sender, nickname: nickname, message: message, index: id} <- @messages do %>
             <div class="chat-message" id="chat-message-<%= id %>">
-              <span class="chat-message sender"><%= sender %></span><br/><span class="chat-message message"><%= message %></span>
+              <span class="chat-message sender" title="<%= sender %>"><%= nickname %></span><br/><span class="chat-message message"><%= message %></span>
             </div>
           <% end %>
         </div>

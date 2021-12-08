@@ -57,7 +57,7 @@
       <% end %>
     </div>
     <div class="embed-chat-container">
-      <%= live_render(@conn, PollinatrWeb.ChatLive) %>
+      <%= live_render(@conn, PollinatrWeb.ChatLive, container: {:div, class: "liveview-chat-module"}) %>
     </div>
     <div class="embed-vote-container">
           <%= live_render(@conn, PollinatrWeb.VoterLive) %>

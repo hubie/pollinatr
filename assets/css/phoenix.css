@@ -162,6 +162,8 @@ button {
 }
 
 .content-body {
+  display: flex;
+  flex-grow: 1;
   margin:  3rem;
   background-color: rgba(0,0,0,0.85);
   position: relative;
@@ -180,27 +182,23 @@ button {
 
 .watch-container {
   display:  flex;
-  flex: 3 1 100rem;
+  flex: 3 1 90rem;
 
 }
 
 .embed-chat-container {
   display: flex;
   flex: 1 1 50rem;
-  /*max-width: 40rem;*/
 }
 
 .chat-container {
   display: flex;
+  flex-grow: 1;
   flex-flow: column;
-  max-width: 50rem;
-  height: max(40rem, min(80rem, calc(100vh - 6rem))); /* no less than 40, no more than 60, but whatever fits in the screen otherwise*/
 }
 .chat-container .chat-box {
-  flex: 1;
   color: white;
-/*  min-height: 60rem;
-  max-height: 60rem;*/
+  /*min-height: 60rem;*/
 }
 .chat-container .compose-message-box {
   /*flex: 1;*/
@@ -210,6 +208,7 @@ button {
   flex: 1;
   align-items: stretch;
   overflow-y: scroll;
+  max-height: min(80rem, calc(100vh - 6rem));
   overscroll-behavior-y: contain;
   scroll-snap-type: y proximity;
 }
@@ -443,12 +442,21 @@ li {
   margin-bottom: 0;
 }
 
-.send-message-input input {
+
+.liveview-chat-module {
+  display: flex;
+  flex: 1;
+}
+
+.send-message-input {
   /* Tell the input to use all the available space */
   flex-grow:2;
+  /*min-width: 100%;*/
+  /*align-content: stretch;*/
   /* And hide the input's outline, so the form looks like the outline */
   border:none;
-  font-size: 1rem;
+  color:  green;
+  font-size: 1.5rem;
 }
 
 .send-message-input input:focus {
