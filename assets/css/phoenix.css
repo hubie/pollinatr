@@ -195,6 +195,7 @@ button {
 .embed-chat-container {
   display: flex;
   flex: 1 1 50rem;
+  min-height: min(60rem, calc(100vh - 7rem));
   max-height: calc(100vh - 6rem);
 }
 
