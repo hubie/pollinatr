@@ -1,6 +1,5 @@
 defmodule PollinatrWeb.Login.MagicTokenLive do
   use PollinatrWeb, :live_view
-  use Phoenix.LiveView, container: {:div, class: "flex-enabled-liveview"}
   alias PollinatrWeb.LayoutView
   import Phoenix.HTML.Form
 

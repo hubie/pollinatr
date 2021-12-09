@@ -32,7 +32,9 @@ defmodule PollinatrWeb.Router do
 
     live "/admin", Login.AccessCodeLive, :index
 
-    live "/login", Login.MagicTokenLive, :index, as: :login
+    live "/login", Login.MagicTokenLive, :index,
+      as: :login,
+      container: {:div, class: "flex-enabled-liveview"}
 
     live "/magical-redeemer", Login.TokenRedeemer, :index, as: :redeem
 

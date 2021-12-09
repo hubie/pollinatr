@@ -103,48 +103,50 @@ defmodule PollinatrWeb.Host do
   def render(assigns) do
     ~L"""
     <div class="content-body">
-      <div>
-        Mode:
-        <% selected_class = "selected" %>
-        <button class="host mode <%= if @show_mode == :preshow, do: selected_class %>" phx-click="showmode" phx-value-mode="preshow">Preshow</button>
-        <button class="host mode <%= if @show_mode == :show, do: selected_class %>" phx-click="showmode" phx-value-mode="show">Show</button>
-        <button class="host mode <%= if @show_mode == :postshow, do: selected_class %>" phx-click="showmode" phx-value-mode="postshow">Postshow</button>
-      </div>
-      <div>
-        <%= f = form_for :question_select, "#", [phx_change: :validate, phx_submit: :save] %>
-          <%= select f, :question, Enum.map(Enum.with_index(@questions), fn {%{question: q}, i} -> {"Q#{i+1}: #{q}", i} end), [class: "host question-select", size: "6"] %>
-          <div>
-            <%= submit "Submit Question" %>
+      <div class="host-container">
+        <div>
+          Mode:
+          <% selected_class = "selected" %>
+          <button class="host mode <%= if @show_mode == :preshow, do: selected_class %>" phx-click="showmode" phx-value-mode="preshow">Preshow</button>
+          <button class="host mode <%= if @show_mode == :show, do: selected_class %>" phx-click="showmode" phx-value-mode="show">Show</button>
+          <button class="host mode <%= if @show_mode == :postshow, do: selected_class %>" phx-click="showmode" phx-value-mode="postshow">Postshow</button>
+        </div>
+        <div>
+          <%= f = form_for :question_select, "#", [phx_change: :validate, phx_submit: :save] %>
+            <%= select f, :question, Enum.map(Enum.with_index(@questions), fn {%{question: q}, i} -> {"Q#{i+1}: #{q}", i} end), [class: "host question-select", size: "6"] %>
+            <div>
+              <%= submit "Submit Question" %>
+            </div>
+          </form>
+          <button class="host close-voting button button-outline" phx-click="close">Close Voting</button>
+        </div>
+        <div>
+        </div>
+        <div class="host open-question live-results">
+          <div class="host open-question question">
+            <h3>Live results:</h3>
           </div>
+          <div>
+            <%= get_in(@results, [:question, :question]) %>
+          </div>
+          <div>
+            <%= for resultSet <- @results.results,
+              {answer, result} <- resultSet do %>
+              <div class="host open-question answers"><%= answer %>: <%= result %></div>
+            <% end %>
+          </div>
+        </div>
+        <div class="host metrics">
+          <div class="host metrics online-users">Online users: <%= @online_voters %></div>
+        </div>
+        <div>
+        <%= m = form_for :custom_message, "#", [phx_click: :validate, phx_submit: :save] %>
+          <span>
+            <%= text_input m, :message, [placeholder: "Custom Message", id: :custom_message] %>
+            <%= submit "Send Message" %>
+          </span>
         </form>
-        <button class="host close-voting button button-outline" phx-click="close">Close Voting</button>
-      </div>
-      <div>
-      </div>
-      <div class="host open-question live-results">
-        <div class="host open-question question">
-          <h3>Live results:</h3>
         </div>
-        <div>
-          <%= get_in(@results, [:question, :question]) %>
-        </div>
-        <div>
-          <%= for resultSet <- @results.results,
-            {answer, result} <- resultSet do %>
-            <div class="host open-question answers"><%= answer %>: <%= result %></div>
-          <% end %>
-        </div>
-      </div>
-      <div class="host metrics">
-        <div class="host metrics online-users">Online users: <%= @online_voters %></div>
-      </div>
-      <div>
-      <%= m = form_for :custom_message, "#", [phx_click: :validate, phx_submit: :save] %>
-        <span>
-          <%= text_input m, :message, [placeholder: "Custom Message", id: :custom_message] %>
-          <%= submit "Send Message" %>
-        </span>
-      </form>
       </div>
     </div>
     """
