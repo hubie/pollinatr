@@ -14,7 +14,7 @@ defmodule Pollinatr.Helpers.Email do
         }),
       vote_login_link:
         generateLoginLink(%{
-          redirect_to: Routes.vote_path(PollinatrWeb.Endpoint, :index),
+          redirect_to: Routes.chat_path(PollinatrWeb.Endpoint, :index),
           email_address: to,
           nickname: nickname
         }),

@@ -85,7 +85,6 @@ defmodule PollinatrWeb.ChatLive do
               <%= submit [class: "send-message-submit"] do %>
                 <i class="fas fa-paper-plane fa-lg"></i>
               <% end %>
-
           </form>
         </div>
       </div>

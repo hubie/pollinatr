@@ -20,7 +20,7 @@ pre{padding: 1em;}
 .container{
   margin: 0 auto;
   /*max-width: 80.0rem;*/
-  padding: 0 2.0rem;
+  padding: 0 0.0rem;
   position: relative;
   min-width: 100%;
 }
@@ -187,6 +187,11 @@ button {
 
 }
 
+.chat-layout > .embed-chat-container {
+  /*max-height: calc(100vh - 6rem);*/
+  min-height: min(80rem, calc(100vh - 7rem));
+}
+
 .embed-chat-container {
   display: flex;
   flex: 1 1 50rem;
@@ -206,11 +211,10 @@ button {
 }
 
 .chat-box {
+  display: flex;
   flex: 1;
   align-items: stretch;
   overflow-y: scroll;
-  min-height: 60rem;
-  max-height: min(80rem, calc(100vh - 6rem));
   overscroll-behavior-y: contain;
   scroll-snap-type: y proximity;
 }
@@ -482,6 +486,22 @@ li {
   padding-left: 1rem;
   padding-right: 1rem;
   margin-bottom: 0rem;
+}
+
+.vote-chat-scroll-tip {
+  text-align: center;
+  /*height: 6rem;*/
+  color: black;
+  font-size: 3rem;
+  font-weight: 600;
+  /*min-height: 8rem;*/
+  background: #F2BC23;
+}
+
+@media all and (min-height: 80rem), all and (max-aspect-ratio: 1/2) {
+  .vote-chat-scroll-tip {
+    display: none;
+  }
 }
 
 @-webkit-keyframes ellipsis-dot {
