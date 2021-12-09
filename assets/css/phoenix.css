@@ -190,6 +190,7 @@ button {
 .chat-layout > .embed-chat-container {
   /*max-height: calc(100vh - 6rem);*/
   min-height: min(80rem, calc(100vh - 7rem));
+  max-height: calc(100vh - 6rem);
 }
 
 .embed-chat-container {

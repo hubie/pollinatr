@@ -52,10 +52,6 @@ defmodule PollinatrWeb.ChatLive do
      }), temporary_assigns: [messages: []]}
   end
 
-  def handle_event("save", %{"send_message" => %{"message" => ""}}, socket) do
-    {:noreply, socket}
-  end
-
   def handle_event("save", %{"send_message" => %{"message" => message}}, socket) do
     Chat.send_message(%Message{
       message: message,
