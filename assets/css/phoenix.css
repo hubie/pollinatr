@@ -491,14 +491,14 @@ li {
 .vote-chat-scroll-tip {
   text-align: center;
   /*height: 6rem;*/
-  color: black;
+  color: #F2BC23;
   font-size: 3rem;
   font-weight: 600;
   /*min-height: 8rem;*/
-  background: #F2BC23;
+  /*background: #F2BC23;*/
 }
 
-@media all and (min-height: 80rem), all and (max-aspect-ratio: 1/2) {
+@media (min-height: 80rem) {
   .vote-chat-scroll-tip {
     display: none;
   }
