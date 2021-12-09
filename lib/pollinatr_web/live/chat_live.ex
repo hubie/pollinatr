@@ -60,7 +60,7 @@ defmodule PollinatrWeb.ChatLive do
       nickname: socket.assigns.nickname
     })
 
-    {:noreply, assign(socket, message: nil)}
+    {:noreply, assign(socket, message: message)}
   end
 
   def handle_info({Chat, {:new_message, message}}, socket) do
