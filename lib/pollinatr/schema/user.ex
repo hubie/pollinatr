@@ -1,7 +1,6 @@
 defmodule Pollinatr.Schema.User do
   use Ecto.Schema
   import Ecto.Changeset
-  alias Ecto.Enum
 
   schema "users" do
     field :email_address, :string
