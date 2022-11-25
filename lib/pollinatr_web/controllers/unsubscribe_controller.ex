@@ -1,7 +1,6 @@
 defmodule PollinatrWeb.UnsubscribeController do
   use PollinatrWeb, :controller
   alias Pollinatr.Helpers.Tokens
-  alias Pollinatr.Repo
   alias Pollinatr.Models.EmailingList
 
   def index(conn, params) do
@@ -9,12 +8,12 @@ defmodule PollinatrWeb.UnsubscribeController do
       Application.fetch_env!(:pollinatr, PollinatrWeb.Endpoint)[:unsubscribe_link_lifespan]
 
     case Tokens.decrypt(:magic_token, params["token"] || "", max_age) do
-      {:ok, %{email_address: email_address, list_name: list_name} = payload} ->
+      {:ok, %{email_address: email_address, list_name: list_name} = _payload} ->
         case EmailingList.remove(%{email: email_address, list_name: list_name}) do
           {:ok, _} ->
             render(conn, "success.html", list_type: list_name)
 
-          {:error, %{errors: [email_emailing_list_id: message]}} ->
+          {:error, %{errors: [email_emailing_list_id: _message]}} ->
             render(conn, "failure.html", reason: "Already unsubscribed")
 
           {:error, reason} ->

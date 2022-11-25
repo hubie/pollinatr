@@ -1,5 +1,9 @@
 import Config
 
+config :pollinatr,
+  admin_login_code: "abcd" #"System.get_env("ADMIN_LOGIN_CODE")"
+
+
 # config/runtime.exs is executed for all environments, including
 # during releases. It is executed after compilation and before the
 # system starts, so it is typically used to load production configuration

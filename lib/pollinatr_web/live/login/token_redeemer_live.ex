@@ -1,7 +1,5 @@
 defmodule PollinatrWeb.Login.TokenRedeemer do
   use PollinatrWeb, :live_view
-  alias PollinatrWeb.LayoutView
-  import Phoenix.HTML.Form
   import PollinatrWeb.Live.Helper, only: [signing_salt: 0]
   alias Pollinatr.Helpers.Tokens
   alias PollinatrWeb.Router.Helpers, as: Routes

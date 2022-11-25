@@ -7,7 +7,9 @@ defmodule Pollinatr.Models.User do
   defstruct validation_code: nil, id: nil, role: nil, email_address: nil
 
   @voter_codes []
-  @admin_codes [System.get_env("ADMIN_LOGIN_CODE")]
+  def get_admin_codes() do
+    [Application.get_env(:pollinatr, :admin_login_code)]
+  end
   @refresh_period 120
 
   def get_user(%{user_id: nil} = params) do
@@ -92,8 +94,8 @@ defmodule Pollinatr.Models.User do
   end
 
   defp new_user(%{validation_code: code, role: role}) do
-    # make_changeset(%__MODULE__{id: "code_" <> code, role: role, validation_code: code})
-    # |> create_user()
+    make_changeset(%__MODULE__{id: "code_" <> code, role: role, validation_code: code})
+    |> create_user()
   end
 
   defp new_user(%{email_address: email, role: role}) do
@@ -110,7 +112,7 @@ defmodule Pollinatr.Models.User do
 
     vc = @voter_codes |> Enum.map(fn vc -> {:"#{vc}", :voter} end)
     :ets.insert(:auth_codes, vc)
-    ac = @admin_codes |> Enum.map(fn ac -> {:"#{ac}", :admin} end)
+    ac = get_admin_codes() |> Enum.map(fn ac -> {:"#{ac}", :admin} end)
     :ets.insert(:auth_codes, ac)
 
     {:ok, pid} = GSS.Spreadsheet.Supervisor.spreadsheet(System.get_env("VOTER_CODE_SHEET_ID"))

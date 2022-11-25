@@ -1,6 +1,5 @@
 defmodule PollinatrWeb.Login.MagicTokenLive do
   use PollinatrWeb, :live_view
-  alias PollinatrWeb.LayoutView
   import Phoenix.HTML.Form
 
   @impl true
