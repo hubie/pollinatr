@@ -10,13 +10,6 @@ import Config
 config :pollinatr,
   ecto_repos: [Pollinatr.Repo]
 
-config :pollinatr, Pollinatr.Repo,
-  database: "pollinatr",
-  username: "pollinatr",
-  password: "password",
-  hostname: "127.0.0.1",
-  port: "15432"
-
 # Configures the endpoint
 config :pollinatr, PollinatrWeb.Endpoint,
   url: [host: "localhost"],
@@ -76,3 +69,14 @@ config :phoenix, :json_library, Jason
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{config_env()}.exs"
+
+config :tailwind,
+    version: "3.2.4",
+    default: [
+      args: ~w(
+        --config=tailwind.config.js
+        --input=css/app.css
+        --output=../priv/static/assets/app.css
+      ),
+      cd: Path.expand("../assets", __DIR__)
+    ]

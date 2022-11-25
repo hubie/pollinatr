@@ -19,7 +19,7 @@ defmodule Pollinatr.MixProject do
   def application do
     [
       mod: {Pollinatr.Application, []},
-      extra_applications: [:logger, :runtime_tools, :elixir_google_spreadsheets, :ex_rated]
+      extra_applications: [:logger, :runtime_tools, :elixir_google_spreadsheets, :ex_rated, :ssl]
     ]
   end
 
@@ -56,7 +56,8 @@ defmodule Pollinatr.MixProject do
       {:bodyguard, "~> 2.4"},
       {:cors_plug, "~> 2.0"},
       {:plug_canonical_host, "~> 2.0"},
-      {:elixir_google_spreadsheets, "~> 0.1.17"}
+      {:elixir_google_spreadsheets, "~> 0.1.17"},
+      {:tailwind, "~> 0.1.6", runtime: Mix.env() == :dev}
     ]
   end
 
@@ -72,7 +73,11 @@ defmodule Pollinatr.MixProject do
       # "ecto.setup": ["ecto.create", "ecto.migrate", "run priv/repo/seeds.exs"],
       # "ecto.reset": ["ecto.drop", "ecto.setup"],
       # test: ["ecto.create --quiet", "ecto.migrate --quiet", "test"],
-      "assets.deploy": ["esbuild default --minify", "phx.digest"]
+      "assets.deploy": [
+        "esbuild default --minify",
+        "tailwind default --minify",
+        "phx.digest"
+      ]
     ]
   end
 end

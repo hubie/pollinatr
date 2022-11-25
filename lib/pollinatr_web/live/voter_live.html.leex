@@ -5,7 +5,7 @@
 <h1>
 <div class="voting">
   <%= case @show_mode do %>
-    <%= :preshow -> %>
+    <% :preshow -> %>
       <div class="preshow">
         <h2>2021 Slackies Voting</h2>
         <p/>
@@ -16,7 +16,7 @@
       </div>
     <% :show -> %>
       <%= case @voter_state do %>
-        <%= :voting_closed -> %>
+        <% :voting_closed -> %>
               *&nbsp;Elevator Music<span class="ellipsis-anim"><span>.</span><span>.</span><span>.</span>&nbsp;*
         <% :voted -> %>
             <h2>You Voted!</h2>

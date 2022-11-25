@@ -47,6 +47,13 @@ if config_env() == :prod do
     ],
     secret_key_base: secret_key_base
 
+    maybe_ipv6 = if System.get_env("ECTO_IPV6"), do: [:inet6], else: []
+    config :pollinatr, Pollinatr.Repo,
+      adapter: Ecto.Adapters.Postgres,
+      url: System.get_env("DATABASE_URL"),
+      pool_size: String.to_integer(System.get_env("DB_POOL_SIZE", "9")),
+      socket_options: maybe_ipv6
+
   # ## Using releases
   #
   # If you are doing OTP releases, you need to instruct Phoenix
