@@ -7,6 +7,8 @@ defmodule PollinatrWeb.ChatLive do
   alias Pollinatr.Presence
   alias Pollinatr.Chat.Chat
   alias Pollinatr.Chat.Message
+  alias Pollinatr.Repo
+  alias Pollinatr.Schema.Users
 
   @topic inspect(__MODULE__)
   @chatTopic "chat"
@@ -28,7 +30,7 @@ defmodule PollinatrWeb.ChatLive do
     mount(%{embed: "true"}, session, socket)
   end
 
-  def mount(params, %{"session_uuid" => key, "user_id" => user_id} = _session, socket) do
+  def mount(params, %{"session_uuid" => key, "user_id" => user_id, "tenant_id" => tenant_id } = session, socket) do
     if connected?(socket), do: subscribe()
 
     # Presence.track(
@@ -38,7 +40,8 @@ defmodule PollinatrWeb.ChatLive do
     #   %{}
     # )
     embed = Map.get(params, "embed", "false")
-    user = Pollinatr.Models.User.get_user(%{user_id: user_id})
+    IO.inspect(session, label: "CHAT SESSION")
+    user = Repo.get_by(Users, [id: user_id], tenant_id: tenant_id)
 
     {:ok,
      assign(socket, %{

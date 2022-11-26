@@ -16,13 +16,14 @@ defmodule PollinatrWeb.Login.TokenRedeemer do
   end
 
   @impl true
-  def mount(params, %{"session_uuid" => key} = _session, socket) do
+  def mount(params, %{"session_uuid" => key, "tenant_id" => tenant_id} = _session, socket) do
     case Tokens.decrypt(:magic_token, params["token"] || "") do
       {:ok, %{email_address: email_address} = payload} ->
         IO.inspect(payload, label: "PAYLOAD")
 
         current_user =
           User.find_or_create_user(%{
+            tenant_id: tenant_id,
             email_address: email_address,
             nickname: get_in(payload, [:nickname]),
             role: :voter

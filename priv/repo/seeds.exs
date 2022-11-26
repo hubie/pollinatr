@@ -9,3 +9,5 @@
 #
 # We recommend using the bang functions (`insert!`, `update!`
 # and so on) as they will fail if something goes wrong.
+
+Pollinatr.Repo.insert!(%Pollinatr.Schema.Tenants{name: "The 2022 Slackies"})

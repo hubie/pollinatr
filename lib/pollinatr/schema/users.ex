@@ -1,8 +1,9 @@
-defmodule Pollinatr.Schema.User do
+defmodule Pollinatr.Schema.Users do
   use Ecto.Schema
   import Ecto.Changeset
 
   schema "users" do
+    field :tenant_id, Ecto.UUID
     field :email_address, :string
     field :nickname, :string
     field :role, Ecto.Enum, values: [:admin, :voter]
@@ -13,8 +14,8 @@ defmodule Pollinatr.Schema.User do
   @doc false
   def changeset(user, attrs) do
     user
-    |> cast(attrs, [:email_address, :nickname, :role])
-    |> validate_required([:email_address, :role])
-    |> unique_constraint(:email_address)
+    |> cast(attrs, [:tenant_id, :email_address, :nickname, :role])
+    |> validate_required([:tenant_id, :email_address, :role])
+    |> unique_constraint([:tenant_id, :email_address])
   end
 end

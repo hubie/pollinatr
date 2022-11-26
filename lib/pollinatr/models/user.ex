@@ -1,7 +1,7 @@
 defmodule Pollinatr.Models.User do
   @behaviour Bodyguard.Policy
   import Ecto.Query
-  alias Pollinatr.Schema.User, as: UserSchema
+  alias Pollinatr.Schema.Users, as: UserSchema
   alias Pollinatr.Repo
 
   defstruct validation_code: nil, id: nil, role: nil, email_address: nil
@@ -12,32 +12,13 @@ defmodule Pollinatr.Models.User do
   end
   @refresh_period 120
 
-  def get_user(%{user_id: nil} = params) do
-    IO.inspect(params, label: "NO USER_ID PROVIDED")
-    nil
-  end
-
-  def get_user(%{user_id: user_id}) do
-    result = Repo.one(from u in UserSchema, where: u.id == ^user_id, select: u)
-    IO.inspect(result, label: "RESULT")
-
-    case result do
-      nil ->
-        IO.inspect(user_id, label: "USER_ID NOT FOUND")
-        nil
-
-      user ->
-        user
-    end
-  end
-
   def create_user(%Ecto.Changeset{} = new_user) do
     IO.inspect(new_user, label: "UPSERTING NEW USER")
 
     {:ok, user} =
       Repo.insert_or_update(new_user,
-        conflict_target: :email_address,
-        on_conflict: {:replace_all_except, [:id, :email_address, :role]}
+        conflict_target: [:tenant_id, :email_address],
+        on_conflict: {:replace_all_except, [:id, :tenant_id, :email_address, :role]}
       )
 
     IO.inspect(user)
@@ -148,9 +129,9 @@ defmodule Pollinatr.Models.User do
 
   def authorize(_, %UserSchema{role: :admin}, _), do: true
   def authorize(:voter, %UserSchema{role: :voter}, _), do: true
-
+  def authorize(_, %{user_id: nil}, _params), do: false
   def authorize(action, %{user_id: user_id}, params),
-    do: authorize(action, get_user(%{user_id: user_id}), params)
+    do: authorize(action, Repo.get_by(UserSchema, id: user_id), params)
 
   def authorize(_action, _user, _params), do: false
 end

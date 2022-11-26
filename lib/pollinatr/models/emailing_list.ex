@@ -13,7 +13,7 @@ defmodule Pollinatr.Models.EmailingList do
         where: l.subscription_type == :opt_out,
         select: s
 
-    case Repo.one(query) do
+    case Repo.one(query, skip_tenant_id: true) do
       nil ->
         true
 

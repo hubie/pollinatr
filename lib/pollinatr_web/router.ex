@@ -10,6 +10,7 @@ defmodule PollinatrWeb.Router do
     plug :protect_from_forgery
     plug :put_secure_browser_headers
     plug :validate_session
+    plug PollinatrWeb.Plug.Tenant, [:use_default]
 
     plug CORSPlug,
       origin: System.get_env("ALLOWED_ORIGINS", "localhost,127.0.0.1") |> String.split(",")
