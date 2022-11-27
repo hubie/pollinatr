@@ -1,5 +1,8 @@
 defmodule Pollinatr.Questions do
   use GenServer
+  require Ecto.Query
+  alias Pollinatr.Repo
+  alias Pollinatr.Schema.{Questions}
 
   @initial_state %{
     questions: []
@@ -18,26 +21,40 @@ defmodule Pollinatr.Questions do
   @impl true
   def init(_state) do
     subscribe()
-    {:ok, %{@initial_state | questions: load_questions()}}
+    {:ok, @initial_state}
   end
 
   @impl true
-  def handle_call(:get_questions, _from, state) do
-    {:reply, state.questions, state}
+  def handle_call(%{get_questions: :all, tenant_id: tenant_id}, _from, state) do
+    questions = Repo.all(
+      Ecto.Query.from(
+        q in Questions,
+        order_by: [asc: :sort_order],
+        preload: :multiple_choice_answers),
+      tenant_id: tenant_id
+      )
+    IO.inspect(Enum.map(questions, fn q -> format_question(q) end), label: "QUESTIONS")
+    {:reply, Enum.map(questions, fn q -> format_question(q) end), state}
   end
 
   @impl true
   def handle_call(%{get_question: id}, _from, state) do
-    {:reply, Enum.find(state.questions, fn x -> x.id == id end), state}
+    question = Repo.one(
+      Ecto.Query.from(
+        q in Questions,
+        where: q.id == ^id,
+        preload: :multiple_choice_answers),
+      skip_tenant_id: true
+      )
+    {:reply, format_question(question), state}
   end
 
-  defp load_questions() do
-    "questions.json"
-    |> File.read!()
-    |> Jason.decode!(keys: :atoms)
-    |> Enum.with_index()
-    |> Enum.map(fn {q, i} ->
-      Map.put(q, :id, Map.get(q, :id, :crypto.hash(:md5, "#{i}") |> Base.encode16()))
-    end)
+  defp format_question(%Questions{id: id, tenant_id: tenant_id, question: question, multiple_choice_answers: answers}) do
+    %{
+      id: id,
+      tenant_id: tenant_id,
+      question: question,
+      answers: answers |> Enum.map(fn a -> a.answer end)
+    }
   end
 end

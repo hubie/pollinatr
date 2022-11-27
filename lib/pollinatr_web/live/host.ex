@@ -15,6 +15,7 @@ defmodule PollinatrWeb.Host do
     results: nil,
     online_voters: 0,
     show_mode: nil,
+    tenant_id: nil,
     message: nil
   }
 
@@ -25,7 +26,7 @@ defmodule PollinatrWeb.Host do
     Phoenix.PubSub.subscribe(Pollinatr.PubSub, @showTopic)
   end
 
-  def mount(_args, %{"user_id" => _user_id} = _session, socket) do
+  def mount(_args, %{"user_id" => _user_id, "tenant_id" => tenant_id} = _session, socket) do
     if connected?(socket), do: subscribe()
 
     %{show_mode: show_mode, message: message} = GenServer.call(Results, :get_show_state)
@@ -36,7 +37,8 @@ defmodule PollinatrWeb.Host do
         online_voters: Results.get_current_voter_count(),
         show_mode: show_mode,
         message: message,
-        questions: GenServer.call(Questions, :get_questions)
+        tenant_id: tenant_id,
+        questions: GenServer.call(Questions, %{get_questions: :all, tenant_id: tenant_id})
     }
 
     {:ok, assign(socket, state)}

@@ -1,6 +1,5 @@
 defmodule Pollinatr.Models.User do
   @behaviour Bodyguard.Policy
-  import Ecto.Query
   alias Pollinatr.Schema.Users, as: UserSchema
   alias Pollinatr.Repo
 

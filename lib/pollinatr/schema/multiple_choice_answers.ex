@@ -1,12 +1,13 @@
 defmodule Pollinatr.Schema.MultipleChoiceAnswers do
   use Ecto.Schema
   import Ecto.Changeset
+  alias Pollinatr.Schema.{Tenants, Questions}
 
   @primary_key {:id, :binary_id, autogenerate: true}
 
   schema "multiple_choice_answers" do
-    field :tenant_id, Ecto.UUID
-    field :question_id, Ecto.UUID
+    belongs_to :tenant, Tenants, type: :binary_id
+    belongs_to :question, Questions, type: :binary_id
     field :sort_order, :integer
     field :answer, :string
 
