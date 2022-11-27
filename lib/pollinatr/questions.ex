@@ -33,7 +33,6 @@ defmodule Pollinatr.Questions do
         preload: :multiple_choice_answers),
       tenant_id: tenant_id
       )
-    IO.inspect(Enum.map(questions, fn q -> format_question(q) end), label: "QUESTIONS")
     {:reply, Enum.map(questions, fn q -> format_question(q) end), state}
   end
 
