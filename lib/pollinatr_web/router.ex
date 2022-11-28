@@ -13,7 +13,7 @@ defmodule PollinatrWeb.Router do
     plug PollinatrWeb.Plug.Tenant, [use_default: true]
 
     plug CORSPlug,
-      origin: System.get_env("ALLOWED_ORIGINS", "localhost,127.0.0.1") |> String.split(",")
+      origin: System.get_env("ALLOWED_ORIGINS", "localhost,127.0.0.1,//pollinatr.fly.dev") |> String.split(",")
   end
 
   pipeline :api do

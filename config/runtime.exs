@@ -3,6 +3,19 @@ import Config
 config :pollinatr,
   admin_login_code: "abcd" #"System.get_env("ADMIN_LOGIN_CODE")"
 
+config :swoosh, :api_client, Swoosh.ApiClient.Hackney
+
+config :pollinatr, Pollinatr.Helpers.Email, from_address: System.get_env("EMAIL_FROM")
+
+config :pollinatr, Pollinatr.Helpers.Mailer,
+  adapter: Swoosh.Adapters.AmazonSES,
+  region: System.get_env("AWS_SES_REGION"),
+  access_key: System.get_env("AWS_SES_ACCESS_KEY"),
+  secret: System.get_env("AWS_SES_SECRET_KEY")
+
+
+config :pollinatr, PollinatrWeb.Endpoint,
+  live_view: [signing_salt: System.get_env("LIVEVIEW_SIGNING_SALT")]
 
 # config/runtime.exs is executed for all environments, including
 # during releases. It is executed after compilation and before the
@@ -17,6 +30,8 @@ if config_env() == :prod do
   #     environment variable DATABASE_URL is missing.
   #     For example: ecto://USER:PASS@HOST/DATABASE
   #     """
+
+  config :logger, level: :info
 
   # config :pollinatr, Pollinatr.Repo,
   #   # ssl: true,
@@ -37,6 +52,13 @@ if config_env() == :prod do
       """
 
   config :pollinatr, PollinatrWeb.Endpoint,
+    url: [host: "pollinatr.fly.dev", scheme: "https", port: 443],
+    # url: [host: "pollinatr.fly.dev", port: 80],
+    check_origin: System.get_env("CHECK_ORIGINS", "//localhost,//pollinatr.fly.dev") |> String.split(","),
+    secret_key_base: System.get_env("SECRET_KEY_BASE"),
+    default_video_provider: System.get_env("DEFAULT_VIDEO_PROVIDER", "streamshark"),
+    streamshark_stream_url: System.get_env("STREAMSHARK_STREAM_URL"),
+    aws_ivs_stream_url: System.get_env("AWS_IVS_STREAM_URL"),
     http: [
       # Enable IPv6 and bind on all interfaces.
       # Set it to  {0, 0, 0, 0, 0, 0, 0, 1} for local network only access.
@@ -47,19 +69,19 @@ if config_env() == :prod do
     ],
     secret_key_base: secret_key_base
 
-    maybe_ipv6 = if System.get_env("ECTO_IPV6"), do: [:inet6], else: []
-    config :pollinatr, Pollinatr.Repo,
-      adapter: Ecto.Adapters.Postgres,
-      url: System.get_env("DATABASE_URL"),
-      pool_size: String.to_integer(System.get_env("DB_POOL_SIZE", "9")),
-      socket_options: maybe_ipv6
+  maybe_ipv6 = if System.get_env("ECTO_IPV6"), do: [:inet6], else: []
+  config :pollinatr, Pollinatr.Repo,
+    adapter: Ecto.Adapters.Postgres,
+    url: System.get_env("DATABASE_URL"),
+    pool_size: String.to_integer(System.get_env("DB_POOL_SIZE", "9")),
+    socket_options: maybe_ipv6
 
   # ## Using releases
   #
   # If you are doing OTP releases, you need to instruct Phoenix
   # to start each relevant endpoint:
   #
-  #     config :pollinatr, PollinatrWeb.Endpoint, server: true
+  config :pollinatr, PollinatrWeb.Endpoint, server: true
   #
   # Then you can assemble a release by calling `mix release`.
   # See `mix help release` for more information.
