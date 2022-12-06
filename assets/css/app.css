@@ -210,6 +210,7 @@ header nav a {
   margin: 0 auto;
   flex-direction: row;
   justify-content: center;
+  padding: 1rem;
 }
 
 button {

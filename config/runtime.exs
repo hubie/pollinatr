@@ -15,7 +15,11 @@ config :pollinatr, Pollinatr.Helpers.Mailer,
 
 
 config :pollinatr, PollinatrWeb.Endpoint,
-  live_view: [signing_salt: System.get_env("LIVEVIEW_SIGNING_SALT")]
+  live_view: [signing_salt: System.get_env("LIVEVIEW_SIGNING_SALT")],
+  default_video_provider: System.get_env("DEFAULT_VIDEO_PROVIDER", "streamshark"),
+  ant_media_stream_url: System.get_env("ANT_MEDIA_STREAM_URL")
+
+
 
 # config/runtime.exs is executed for all environments, including
 # during releases. It is executed after compilation and before the
@@ -51,12 +55,12 @@ if config_env() == :prod do
       You can generate one by calling: mix phx.gen.secret
       """
 
+  host = System.get_env("PHX_HOST") || "pollinatr.fly.dev"
   config :pollinatr, PollinatrWeb.Endpoint,
-    url: [host: "pollinatr.fly.dev", scheme: "https", port: 443],
+    url: [host: host, scheme: "https", port: 443],
     # url: [host: "pollinatr.fly.dev", port: 80],
     check_origin: System.get_env("CHECK_ORIGINS", "//localhost,//pollinatr.fly.dev") |> String.split(","),
     secret_key_base: System.get_env("SECRET_KEY_BASE"),
-    default_video_provider: System.get_env("DEFAULT_VIDEO_PROVIDER", "streamshark"),
     streamshark_stream_url: System.get_env("STREAMSHARK_STREAM_URL"),
     aws_ivs_stream_url: System.get_env("AWS_IVS_STREAM_URL"),
     http: [

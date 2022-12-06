@@ -17,17 +17,10 @@
     <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon/favicon-16x16.png">
     <link rel="manifest" href="/images/favicon/site.webmanifest">
 
-    <link rel="preconnect" href="https://fonts.gstatic.com"> 
+    <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Montserrat:wght@400;s600&display=swap" rel="stylesheet">
 
-    <!-- Needed for /watch  TODO: Scope these better so they're not included in /vote -->
-<%#     <!-- Chromecast SDK -->
-    <script type="text/javascript" src="//www.gstatic.com/cv/js/sender/v1/cast_sender.js?loadCastFramework=1"></script>
-
-    <!-- THEOplayer library and css -->
-    <script type="text/javascript" src="https://cdn.myth.theoplayer.com/1230daef-f515-4df9-b106-eacd30822514/THEOplayer.js"></script>
-    <link rel="stylesheet" type="text/css" href="https://cdn.myth.theoplayer.com/1230daef-f515-4df9-b106-eacd30822514/ui.css" />
- %>  </head>
+ </head>
   <body {if assigns[:embed] == "true", do: [class: "embedded"], else: []}>
     <!--
 ##    ##  #######  ##     ## #### ########  ########             ###             ########  #### ########
