@@ -1,7 +1,3 @@
-@import "tailwindcss/base";
-@import "tailwindcss/components";
-@import "tailwindcss/utilities";
-
 @media only screen and (min-device-width: 581px) {
    .container {
      width: 580px !important;
