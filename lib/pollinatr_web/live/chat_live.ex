@@ -24,6 +24,7 @@ defmodule PollinatrWeb.ChatLive do
     embed: false,
     session_id: nil,
     user_id: nil,
+    tenant_id: nil,
     username: nil,
     role: nil,
     messages: [],
@@ -53,6 +54,7 @@ defmodule PollinatrWeb.ChatLive do
        | embed: embed,
          session_id: key,
          user_id: user.id,
+         tenant_id: tenant_id,
          username: if(user.role == :admin, do: "Admin", else: user.email_address),
          role: user.role,
          nickname:
@@ -71,6 +73,7 @@ defmodule PollinatrWeb.ChatLive do
 
   def handle_event("save", %{"send_message" => %{"message" => message}}, socket) do
     Chat.send_message(%Message{
+      tenant_id: socket.assigns.tenant_id,
       message: message,
       session_id: socket.assigns.session_id,
       user_id: socket.assigns.user_id,
