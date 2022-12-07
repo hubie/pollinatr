@@ -37,7 +37,7 @@ defmodule Pollinatr.Models.EmailingList do
             emailing_list_id: list_id
           })
 
-        Repo.insert(changeset)
+        Repo.insert(changeset, skip_tenant_id: true)
 
       %{} ->
         {:error, :unsupported_subscription_type}
@@ -46,9 +46,10 @@ defmodule Pollinatr.Models.EmailingList do
 
   defp get_list(%{list_name: list_name}) do
     Repo.one(
-      from l in EmailingLists,
+      from(l in EmailingLists,
         where: l.name == ^list_name,
-        select: l
-    )
+        select: l),
+        skip_tenant_id: true
+        )
   end
 end

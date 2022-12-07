@@ -235,6 +235,10 @@
    font-weight: 500;
    color: #F2BC23;
  }
+
+ .ban-user-sigil {
+    cursor: pointer;
+ }
  
  .embed-vote-container {
    display: flex;

@@ -36,9 +36,11 @@ defmodule PollinatrWeb.Plug.Session do
       [{_, token}] ->
         case Phoenix.Token.verify(PollinatrWeb.Endpoint, signing_salt(), token, max_age: 806_400) do
           {:ok, user_id} ->
+            IO.inspect("users_socket:#{user_id}", label: "SESSION USER")
             conn
             |> assign(:user_id, user_id)
             |> put_session("user_id", user_id)
+            |> put_session(:live_socket_id, "users_socket:#{user_id}")
 
           _ ->
             conn
