@@ -19,7 +19,7 @@ defmodule Pollinatr.MixProject do
   def application do
     [
       mod: {Pollinatr.Application, []},
-      extra_applications: [:logger, :runtime_tools, :elixir_google_spreadsheets, :ex_rated, :ssl]
+      extra_applications: [:logger, :runtime_tools, :ex_rated, :ssl]
     ]
   end
 
@@ -56,7 +56,8 @@ defmodule Pollinatr.MixProject do
       {:bodyguard, "~> 2.4"},
       {:cors_plug, "~> 2.0"},
       {:plug_canonical_host, "~> 2.0"},
-      {:elixir_google_spreadsheets, "~> 0.1.17"}
+      {:hackney, "~> 1.9"}
+      # {:elixir_google_spreadsheets, "~> 0.1.17"}
     ]
   end
 

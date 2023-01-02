@@ -19,9 +19,9 @@ config :pollinatr, PollinatrWeb.Endpoint,
   # 90 days
   unsubscribe_link_lifespan: 90 * 24 * 60 * 60
 
-config :goth, json: System.get_env("GOOGLE_SERVICE_KEY")
+# config :goth, json: System.get_env("GOOGLE_SERVICE_KEY")
 
-config :elixir_google_spreadsheets, :client, request_workers: 20
+# config :elixir_google_spreadsheets, :client, request_workers: 20
 
 # Configures the mailer
 #

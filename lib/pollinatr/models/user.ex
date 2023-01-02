@@ -95,10 +95,10 @@ defmodule Pollinatr.Models.User do
     ac = get_admin_codes() |> Enum.map(fn ac -> {:"#{ac}", :admin} end)
     :ets.insert(:auth_codes, ac)
 
-    {:ok, pid} = GSS.Spreadsheet.Supervisor.spreadsheet(System.get_env("VOTER_CODE_SHEET_ID"))
+    # {:ok, pid} = GSS.Spreadsheet.Supervisor.spreadsheet(System.get_env("VOTER_CODE_SHEET_ID"))
 
-    get_codes(pid)
-    Process.exit(pid, :kill)
+    # get_codes(pid)
+    # Process.exit(pid, :kill)
 
     refresh_time = DateTime.utc_now() |> DateTime.to_unix()
     :ets.insert(:auth_meta, {:last_refresh, refresh_time})
@@ -112,18 +112,18 @@ defmodule Pollinatr.Models.User do
     max_rows = 300
     end_row = start_row + max_rows
 
-    {:ok, fetched_codes} = GSS.Spreadsheet.read_rows(pid, start_row, end_row, column_to: 1)
-    new_codes = fetched_codes |> List.flatten() |> Enum.reject(&(is_nil(&1) || &1 == ""))
+    # {:ok, fetched_codes} = GSS.Spreadsheet.read_rows(pid, start_row, end_row, column_to: 1)
+    # new_codes = fetched_codes |> List.flatten() |> Enum.reject(&(is_nil(&1) || &1 == ""))
 
-    case Enum.count(new_codes) do
-      0 ->
-        :ok
+    # case Enum.count(new_codes) do
+    #   0 ->
+    #     :ok
 
-      _ ->
-        vc = new_codes |> Enum.map(fn vc -> {:"#{vc}", :voter} end)
-        :ets.insert(:auth_codes, vc)
-        get_codes(pid, end_row + 1)
-    end
+    #   _ ->
+    #     vc = new_codes |> Enum.map(fn vc -> {:"#{vc}", :voter} end)
+    #     :ets.insert(:auth_codes, vc)
+    #     get_codes(pid, end_row + 1)
+    # end
   end
 
   def authorize(_, %UserSchema{role: :admin}, _), do: true

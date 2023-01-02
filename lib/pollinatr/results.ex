@@ -27,15 +27,16 @@ defmodule Pollinatr.Results do
 
   @impl true
   def init(_state) do
-    state =
-      case GSS.Spreadsheet.Supervisor.spreadsheet(System.get_env("VOTE_ARCHIVE_SHEET_ID", "")) do
-        {:ok, pid} ->
-          %{@initial_state | gsheet_archive_pid: pid}
+    state = @initial_state
+    # state =
+    #   case GSS.Spreadsheet.Supervisor.spreadsheet(System.get_env("VOTE_ARCHIVE_SHEET_ID", "")) do
+    #     {:ok, pid} ->
+    #       %{@initial_state | gsheet_archive_pid: pid}
 
-        e ->
-          IO.inspect(["Error initializing Archive Google Sheet, going without it", e])
-          @initial_state
-      end
+    #     e ->
+    #       IO.inspect(["Error initializing Archive Google Sheet, going without it", e])
+    #       @initial_state
+    #   end
 
     {:ok, state}
   end
@@ -183,7 +184,7 @@ defmodule Pollinatr.Results do
 
     gsrow = [time, question] ++ stripped_results
     IO.inspect(gsrow, label: "Writing Google Sheet Row")
-    GSS.Spreadsheet.append_row(pid, 1, gsrow)
+    # GSS.Spreadsheet.append_row(pid, 1, gsrow)
 
     IO.inspect([new_archive, label: "RESULT_ARCHIVE"])
     %{state | results: [], question: %{}, archived_results: new_archive}
