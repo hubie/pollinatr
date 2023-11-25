@@ -1,7 +1,7 @@
 defmodule PollinatrWeb.Components.ResultsComponent do
-  use Phoenix.LiveComponent
+  use Phoenix.Component
 
-  def render(assigns) do
+  def showResults(assigns) do
     ~L"""
       <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.6.0/chart.min.js"></script>
       <div phx-update="ignore" class="chart-container">

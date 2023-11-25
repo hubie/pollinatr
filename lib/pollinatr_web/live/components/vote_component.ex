@@ -1,15 +1,15 @@
 defmodule PollinatrWeb.Components.VoteComponent do
-  use Phoenix.LiveComponent
+  use Phoenix.Component
 
-  def render(assigns) do
-    ~L"""
+  def votePanel(assigns) do
+    ~H"""
     <%= if @message != nil do %>
       <div class="message"><%= @message %></div>
     <% end %>
 
     <%= case @show_mode do %>
       <% :preshow -> %>
-        <h2>Welcome to the 2020 Slackies!</h2>
+        <h2>Welcome to the 2023 Slackies!</h2>
         <p/>
         The winners for some categories will be chosen by you lovely people!
         The nominees will be introduced, and when it's time to place your vote, buttons to select the nominees will automatically appear – right here!
@@ -18,14 +18,13 @@ defmodule PollinatrWeb.Components.VoteComponent do
       <% :show -> %>
         <%= case @voter_state do %>
           <% :voting_closed -> %>
-                The proposition is<span class="ellipsis-anim"><span>.</span><span>.</span><span>.</span>
+                The proposition is<span class="ellipsis-anim"><span>.</span><span>.</span><span>.</span></span>
           <% :voted -> %>
               Your vote has been counted!
               <br/>
               <i class="fas fa-vote-yea vote-counted"></i>
           <% :new_question -> %>
-            <%= question = @question
-              live_component(PollinatrWeb.Components.QuestionComponent, question: question) %>
+            <PollinatrWeb.Components.QuestionComponent.ask question={@question} />
             <% _ -> %>
               <%= "Unknown state: #{@voter_state}" %>
           <% end %>

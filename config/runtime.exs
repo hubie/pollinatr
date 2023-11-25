@@ -1,25 +1,32 @@
 import Config
+import Dotenvy
+
+source(["#{config_env()}.env", "#{config_env()}.override.env", System.get_env()])
 
 config :pollinatr,
-  admin_login_code: "abcd" #"System.get_env("ADMIN_LOGIN_CODE")"
+  admin_login_code: env!("ADMIN_LOGIN_CODE", :string, "abcd")
 
 config :swoosh, :api_client, Swoosh.ApiClient.Hackney
 
-config :pollinatr, Pollinatr.Helpers.Email, from_address: System.get_env("EMAIL_FROM")
+config :pollinatr, Pollinatr.Helpers.Email,
+  from_address: env!("EMAIL_FROM", :string, "noreply@example.com")
 
 config :pollinatr, Pollinatr.Helpers.Mailer,
   adapter: Swoosh.Adapters.AmazonSES,
-  region: System.get_env("AWS_SES_REGION"),
-  access_key: System.get_env("AWS_SES_ACCESS_KEY"),
-  secret: System.get_env("AWS_SES_SECRET_KEY")
-
+  region: env!("AWS_SES_REGION", :string),
+  access_key: env!("AWS_SES_ACCESS_KEY", :string),
+  secret: env!("AWS_SES_SECRET_KEY", :string)
 
 config :pollinatr, PollinatrWeb.Endpoint,
-  live_view: [signing_salt: System.get_env("LIVEVIEW_SIGNING_SALT")],
-  default_video_provider: System.get_env("DEFAULT_VIDEO_PROVIDER", "streamshark"),
-  ant_media_stream_url: System.get_env("ANT_MEDIA_STREAM_URL")
+  live_view: [signing_salt: env!("LIVEVIEW_SIGNING_SALT", :string!)],
+  default_video_provider: env!("DEFAULT_VIDEO_PROVIDER", :string, "streamshark"),
+  ant_media_stream_url: env!("ANT_MEDIA_STREAM_URL", :string)
 
-
+config :logger, :console,
+  format: "$time $metadata[$level] $message\n",
+  metadata: [:request_id],
+  level: :debug,
+  handle_sasl_reports: true
 
 # config/runtime.exs is executed for all environments, including
 # during releases. It is executed after compilation and before the
@@ -49,35 +56,38 @@ if config_env() == :prod do
   # to check this value into version control, so we use an environment
   # variable instead.
   secret_key_base =
-    System.get_env("SECRET_KEY_BASE") ||
+    env!("SECRET_KEY_BASE", :string) ||
       raise """
       environment variable SECRET_KEY_BASE is missing.
       You can generate one by calling: mix phx.gen.secret
       """
 
-  host = System.get_env("PHX_HOST") || "pollinatr.fly.dev"
+  host = env!("PHX_HOST", :string, "pollinatr.fly.dev")
+
   config :pollinatr, PollinatrWeb.Endpoint,
     url: [host: host, scheme: "https", port: 443],
     # url: [host: "pollinatr.fly.dev", port: 80],
-    check_origin: System.get_env("CHECK_ORIGINS", "//localhost,//pollinatr.fly.dev") |> String.split(","),
-    secret_key_base: System.get_env("SECRET_KEY_BASE"),
-    streamshark_stream_url: System.get_env("STREAMSHARK_STREAM_URL"),
-    aws_ivs_stream_url: System.get_env("AWS_IVS_STREAM_URL"),
+    check_origin:
+      env!("CHECK_ORIGINS", :string!, "//localhost,//pollinatr.fly.dev") |> String.split(","),
+    secret_key_base: env!("SECRET_KEY_BASE", :string!),
+    streamshark_stream_url: env!("STREAMSHARK_STREAM_URL", :string),
+    aws_ivs_stream_url: env!("AWS_IVS_STREAM_URL", :string),
     http: [
       # Enable IPv6 and bind on all interfaces.
       # Set it to  {0, 0, 0, 0, 0, 0, 0, 1} for local network only access.
       # See the documentation on https://hexdocs.pm/plug_cowboy/Plug.Cowboy.html
       # for details about using IPv6 vs IPv4 and loopback vs public addresses.
       ip: {0, 0, 0, 0, 0, 0, 0, 0},
-      port: String.to_integer(System.get_env("PORT") || "4000")
+      port: env!("PORT", :integer, 4000)
     ],
     secret_key_base: secret_key_base
 
-  maybe_ipv6 = if System.get_env("ECTO_IPV6"), do: [:inet6], else: []
+  maybe_ipv6 = if env!("ECTO_IPV6"), do: [:inet6], else: []
+
   config :pollinatr, Pollinatr.Repo,
     adapter: Ecto.Adapters.Postgres,
-    url: System.get_env("DATABASE_URL"),
-    pool_size: String.to_integer(System.get_env("DB_POOL_SIZE", "9")),
+    url: env!("DATABASE_URL"),
+    pool_size: env!("DB_POOL_SIZE", :integer, 9),
     socket_options: maybe_ipv6
 
   # ## Using releases

@@ -2,7 +2,7 @@ defmodule PollinatrWeb.Components.ChatboxComponent do
   use Phoenix.LiveComponent
 
   def render(assigns) do
-    ~L"""
+    ~H"""
     <div>
       <%= for %{user_id: sender, message: message} <- @messages do %>
         <%= sender %>: <%= message %> <br/>

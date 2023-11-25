@@ -1,5 +1,6 @@
 defmodule PollinatrWeb.ChatLive do
   use Phoenix.LiveView
+
   import Phoenix.LiveView.Helpers
   import Phoenix.HTML.Form
 
@@ -9,6 +10,7 @@ defmodule PollinatrWeb.ChatLive do
   alias Pollinatr.Chat.Chat
   alias Pollinatr.Chat.Message
   alias Pollinatr.Repo
+  alias Pollinatr.Schema.ChatLog
   alias Pollinatr.Schema.Users
 
   @topic inspect(__MODULE__)
@@ -28,14 +30,19 @@ defmodule PollinatrWeb.ChatLive do
     username: nil,
     role: nil,
     messages: [],
-    nickname: nil
+    nickname: nil,
+    new_message_form: Chat.new_message(%ChatLog{}) |> to_form()
   }
 
   def mount(:not_mounted_at_router, session, socket) do
     mount(%{embed: "true"}, session, socket)
   end
 
-  def mount(params, %{"session_uuid" => key, "user_id" => user_id, "tenant_id" => tenant_id } = session, socket) do
+  def mount(
+        params,
+        %{"session_uuid" => key, "user_id" => user_id, "tenant_id" => tenant_id} = session,
+        socket
+      ) do
     if connected?(socket), do: subscribe(%{user_id: user_id})
 
     # Presence.track(
@@ -67,11 +74,11 @@ defmodule PollinatrWeb.ChatLive do
     "user:#{user_id}"
   end
 
-  def handle_event("save", %{"send_message" => %{"message" => ""}}, socket) do
+  def handle_event("save", %{"chat_log" => %{"message" => ""}}, socket) do
     {:noreply, socket}
   end
 
-  def handle_event("save", %{"send_message" => %{"message" => message}}, socket) do
+  def handle_event("save", %{"chat_log" => %{"message" => message}}, socket) do
     Chat.send_message(%Message{
       tenant_id: socket.assigns.tenant_id,
       message: message,
@@ -85,7 +92,6 @@ defmodule PollinatrWeb.ChatLive do
   end
 
   def handle_event("ban-user", %{"userid" => user_id} = _params, socket) do
-
     Phoenix.PubSub.broadcast(
       Pollinatr.PubSub,
       get_topic_for_user(user_id),
@@ -106,24 +112,38 @@ defmodule PollinatrWeb.ChatLive do
     EmailingList.remove(%{email: user_id, list_name: "login"})
     :ets.delete(:auth_table, :"#{session_id}")
 
-    {:noreply, redirect(socket, to: "/login")} # TODO: this doesn't work because our session probably died already from the 'disconnect' message above
+    # TODO: this doesn't work because our session probably died already from the 'disconnect' message above
+    {:noreply, redirect(socket, to: "/login")}
   end
 
   def handle_info({Chat, {:new_message, message}}, socket) do
+    IO.inspect(["NEW MESSSAGE", message])
     {:noreply, assign(socket, :messages, [message])}
   end
 
+  def handle_info(msg, socket) do
+    IO.inspect(msg, label: "Unhandled message")
+    {:noreply, socket}
+  end
+
+  attr :field, Phoenix.HTML.FormField
+  attr :rest, :global, include: ~w(type)
+
+  def input(assigns) do
+    ~H"""
+    <input id={@field.id} name={@field.name} value={@field.value} {@rest} />
+    """
+  end
+
   def render(assigns) do
-    ~L"""
+    ~H"""
     <div class="content-body">
       <div class="chat-container">
         <div class="chat-box" id="chat-box" phx-update="append">
           <%= for %{user_id: user_id, username: username, nickname: nickname, message: message, index: id} <- @messages do %>
-            <div class="chat-message" id="chat-message-<%= id %>">
-              <span class="chat-message sender" title="<%= username %>"><%= nickname %></span>
-              <%= if(@role == :admin) do %>
-                <span class="ban-user-sigil" title="Kick and Ban user_id <%= user_id %>" phx-click="ban-user" phx-value-userid="<%= user_id %>">🚫</span>
-              <% end %>
+            <div class="chat-message" id={"chat-message-#{id}"}>
+              <span class="chat-message sender" title={username}><%= nickname %></span>
+                <span :if={@role == :admin} class="ban-user-sigil" title={"Kick and Ban user_id #{user_id}"} phx-click="ban-user" phx-value-userid={user_id}>🚫</span>
               <br/>
               <span class="chat-message message"><%= message %></span>
             </div>
@@ -131,12 +151,15 @@ defmodule PollinatrWeb.ChatLive do
         </div>
 
         <div class="compose-message-box">
-          <%= m = form_for :send_message, "#", [phx_submit: :save, class: "send-message-form"] %>
-              <%= text_input m, :message, [placeholder: "Message", id: :submit_message, class: "send-message-input", phx_hook: "MessageSubmit"] %>
-              <%= submit [class: "send-message-submit"] do %>
-                <i class="fas fa-paper-plane fa-lg"></i>
-              <% end %>
-          </form>
+          <.form
+            for={@new_message_form}
+            phx-submit="save"
+          >
+            <.input field={@new_message_form[:message]} placeholder="Message" class="send-message-input" phx_hook="MessageSubmit" />
+            <button type="submit" class="send-message-submit">
+              <i class="fas fa-paper-plane fa-lg"/>
+            </button>
+          </.form>
         </div>
       </div>
     </div>

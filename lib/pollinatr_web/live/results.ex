@@ -62,7 +62,7 @@ defmodule PollinatrWeb.Results do
       _ ->
         ~L"""
         <div class="resultscontainer">
-          <%= live_component(PollinatrWeb.Components.ResultsComponent) %>
+          <PollinatrWeb.Components.ResultsComponent.showResults />
         </div>
         """
     end

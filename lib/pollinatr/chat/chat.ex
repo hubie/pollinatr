@@ -57,7 +57,13 @@ defmodule Pollinatr.Chat.Chat do
     GenServer.call(__MODULE__, {:get_recent_messages, count})
   end
 
-  defp add_to_chat_log(%Message{tenant_id: tenant_id, user_id: user_id, message: message} = _message) do
+  def new_message(%ChatLog{} = chatlog, attrs \\ %{}) do
+    ChatLog.changeset(chatlog, attrs)
+  end
+
+  defp add_to_chat_log(
+         %Message{tenant_id: tenant_id, user_id: user_id, message: message} = _message
+       ) do
     changeset =
       ChatLog.changeset(%ChatLog{}, %{
         tenant_id: tenant_id,

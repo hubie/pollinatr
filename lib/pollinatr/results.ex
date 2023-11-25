@@ -204,6 +204,8 @@ defmodule Pollinatr.Results do
   end
 
   defp broadcast_question(question) do
+    IO.inspect(question, label: "broadcasting")
+
     Phoenix.PubSub.broadcast(
       Pollinatr.PubSub,
       @questionsTopic,

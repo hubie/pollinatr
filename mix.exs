@@ -5,7 +5,7 @@ defmodule Pollinatr.MixProject do
     [
       app: :pollinatr,
       version: "0.1.0",
-      elixir: "~> 1.14",
+      elixir: "~> 1.15",
       elixirc_paths: elixirc_paths(Mix.env()),
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
@@ -32,16 +32,16 @@ defmodule Pollinatr.MixProject do
   # Type `mix help deps` for examples and options.
   defp deps do
     [
-      {:phoenix, "~> 1.6.2"},
+      {:phoenix, "~> 1.7.2"},
       {:phoenix_ecto, "~> 4.4"},
       {:ecto_sql, "~> 3.6"},
       {:postgrex, ">= 0.0.0"},
       {:phoenix_html, "~> 3.0"},
-      {:phoenix_live_reload, "~> 1.2", only: :dev},
-      {:phoenix_live_view, "~> 0.16.0"},
+      {:phoenix_live_reload, "~> 1.4", only: :dev},
+      {:phoenix_live_view, "~> 0.20.1"},
       {:floki, ">= 0.30.0", only: :test},
       {:phoenix_live_dashboard, "~> 0.5"},
-      {:esbuild, "~> 0.2", runtime: Mix.env() == :dev},
+      {:esbuild, "~> 0.8.1", runtime: Mix.env() == :dev},
       {:swoosh, "~> 1.3"},
       {:phoenix_swoosh, "~> 1.0"},
       {:telemetry_metrics, "~> 0.6"},
@@ -50,13 +50,14 @@ defmodule Pollinatr.MixProject do
       {:jason, "~> 1.2"},
       {:gen_smtp, "~> 1.0"},
       {:ex_rated, "~> 2.0"},
-      {:plug_cowboy, "~> 2.5"},
+      {:plug_cowboy, "~> 2.6"},
       {:plug_crypto, "~> 1.0"},
       {:elixir_uuid, "~> 1.2"},
       {:bodyguard, "~> 2.4"},
       {:cors_plug, "~> 2.0"},
       {:plug_canonical_host, "~> 2.0"},
-      {:hackney, "~> 1.9"}
+      {:hackney, "~> 1.9"},
+      {:dotenvy, "~> 0.8.0"}
       # {:elixir_google_spreadsheets, "~> 0.1.17"}
     ]
   end

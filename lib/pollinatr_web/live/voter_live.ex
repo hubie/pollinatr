@@ -3,6 +3,7 @@ defmodule PollinatrWeb.VoterLive do
 
   alias Pollinatr.Presence
   alias Pollinatr.Results
+  alias PollinatrWeb.Components.VoteComponent
 
   @topic inspect(__MODULE__)
   @metricsTopic inspect(Pollinatr.Metrics)
@@ -80,7 +81,7 @@ defmodule PollinatrWeb.VoterLive do
     {:noreply, new_state}
   end
 
-  def handle_info({Results, %{new_question: question, voter_state: new_voter_state}}, state) do
+  def handle_info({Results, %{new_question: question, voter_state: new_voter_state}} = msg, state) do
     new_state =
       state
       |> update(:question, fn _ -> question end)
@@ -103,5 +104,11 @@ defmodule PollinatrWeb.VoterLive do
       |> update(:voter_state, fn _ -> new_voter_state end)
 
     {:noreply, new_socket}
+  end
+
+  def render(assigns) do
+    ~H"""
+    <VoteComponent.votePanel show_mode={@show_mode} message={@message} voter_state={@voter_state} question={@question}/>
+    """
   end
 end
