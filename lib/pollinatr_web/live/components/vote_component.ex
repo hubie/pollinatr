@@ -18,7 +18,7 @@ defmodule PollinatrWeb.Components.VoteComponent do
       <% :show -> %>
         <%= case @voter_state do %>
           <% :voting_closed -> %>
-                The proposition is<span class="ellipsis-anim"><span>.</span><span>.</span><span>.</span></span>
+                Suspenseful Music Playing<span class="ellipsis-anim"><span>.</span><span>.</span><span>.</span></span>
           <% :voted -> %>
               Your vote has been counted!
               <br/>
