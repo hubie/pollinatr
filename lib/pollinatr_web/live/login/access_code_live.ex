@@ -1,5 +1,5 @@
 defmodule PollinatrWeb.Login.AccessCodeLive do
-  use PollinatrWeb, :live_view
+  # use PollinatrWeb, :live_view
   use Phoenix.LiveView, container: {:div, class: "flex-enabled-liveview"}
   import Phoenix.HTML.Form
   import PollinatrWeb.Live.Helper, only: [signing_salt: 0]

@@ -2,9 +2,9 @@ defmodule PollinatrWeb.Components.ResultsComponent do
   use Phoenix.Component
 
   def showResults(assigns) do
-    ~L"""
+    ~H"""
       <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.6.0/chart.min.js"></script>
-      <div phx-update="ignore" class="chart-container">
+      <div id="resultsChartContainer" phx-update="ignore" class="chart-container">
         <canvas class="results chart" id="resultsChart" phx-hook="ResultsChart"></canvas>
       </div>
     """

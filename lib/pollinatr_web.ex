@@ -45,7 +45,7 @@ defmodule PollinatrWeb do
   def live_view do
     quote do
       use Phoenix.LiveView,
-        layout: {PollinatrWeb.LayoutView, "live.html"}
+        layout: {PollinatrWeb.LayoutView, :live}
 
       unquote(view_helpers())
     end

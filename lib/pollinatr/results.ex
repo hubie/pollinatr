@@ -169,21 +169,21 @@ defmodule Pollinatr.Results do
            results: results,
            question: %{question: question, id: id},
            archived_results: archived_results,
-           gsheet_archive_pid: pid
+           gsheet_archive_pid: _pid
          } = state
        ) do
     new_archive = Map.put(archived_results, id, %{results: results, question: question})
 
-    time = DateTime.now("Etc/UTC") |> elem(1) |> to_string
+    # time = DateTime.now("Etc/UTC") |> elem(1) |> to_string
 
-    stripped_results =
-      for rs <- results, {a, v} <- rs do
-        [a, v]
-      end
-      |> List.flatten()
+    # stripped_results =
+    #   for rs <- results, {a, v} <- rs do
+    #     [a, v]
+    #   end
+    #   |> List.flatten()
 
-    gsrow = [time, question] ++ stripped_results
-    IO.inspect(gsrow, label: "Writing Google Sheet Row")
+    # gsrow = [time, question] ++ stripped_results
+    # IO.inspect(gsrow, label: "Writing Google Sheet Row")
     # GSS.Spreadsheet.append_row(pid, 1, gsrow)
 
     IO.inspect([new_archive, label: "RESULT_ARCHIVE"])

@@ -4,6 +4,7 @@ defmodule PollinatrWeb.Host do
 
   alias Pollinatr.Results
   alias Pollinatr.Questions
+  import PollinatrWeb.CoreComponents
 
   @topic inspect(__MODULE__)
   @resultsTopic "results"
@@ -16,7 +17,8 @@ defmodule PollinatrWeb.Host do
     online_voters: 0,
     show_mode: nil,
     tenant_id: nil,
-    message: nil
+    message: nil,
+    question_select_form: %{"question" => nil} |> to_form()
   }
 
   def subscribe do
@@ -103,27 +105,16 @@ defmodule PollinatrWeb.Host do
   end
 
   def render(assigns) do
-    ~L"""
+    ~H"""
     <div class="content-body">
       <div class="host-container">
         <div>
           Mode:
-          <% selected_class = "selected" %>
-          <button class="host mode <%= if @show_mode == :preshow, do: selected_class %>" phx-click="showmode" phx-value-mode="preshow">Preshow</button>
-          <button class="host mode <%= if @show_mode == :show, do: selected_class %>" phx-click="showmode" phx-value-mode="show">Show</button>
-          <button class="host mode <%= if @show_mode == :postshow, do: selected_class %>" phx-click="showmode" phx-value-mode="postshow">Postshow</button>
+          <button class="host mode {if @show_mode == :preshow, do: {selected}}" phx-click="showmode" phx-value-mode="preshow">Preshow</button>
+          <button class="host mode {if @show_mode == :show, do: {selected}}" phx-click="showmode" phx-value-mode="show">Show</button>
+          <button class="host mode {if @show_mode == :postshow, do: {selected}}" phx-click="showmode" phx-value-mode="postshow">Postshow</button>
         </div>
-        <div>
-          <%= f = form_for :question_select, "#", [phx_change: :validate, phx_submit: :save] %>
-            <%= select f, :question, Enum.map(Enum.with_index(@questions), fn {%{question: q}, i} -> {"Q#{i+1}: #{q}", i} end), [class: "host question-select", size: "6"] %>
-            <div>
-              <%= submit "Submit Question" %>
-            </div>
-          </form>
-          <button class="host close-voting button button-outline" phx-click="close">Close Voting</button>
-        </div>
-        <div>
-        </div>
+        <.submitQuestionForm questions={@questions} question_select_form={@question_select_form}/>
         <div class="host open-question live-results">
           <div class="host open-question question">
             <h3>Live results:</h3>
@@ -141,15 +132,66 @@ defmodule PollinatrWeb.Host do
         <div class="host metrics">
           <div class="host metrics online-users">Online users: <%= @online_voters %></div>
         </div>
-        <div>
-        <%= m = form_for :custom_message, "#", [phx_click: :validate, phx_submit: :save] %>
-          <span>
-            <%= text_input m, :message, [placeholder: "Custom Message", id: :custom_message] %>
-            <%= submit "Send Message" %>
-          </span>
-        </form>
-        </div>
       </div>
+    </div>
+    """
+  end
+
+  # <div>
+  #   <%= m = form_for :custom_message, "#", [phx_click: :validate, phx_submit: :save] %>
+  #     <span>
+  #       <%= text_input m, :message, [placeholder: "Custom Message", id: :custom_message] %>
+  #       <%= submit "Send Message" %>
+  #     </span>
+  #   <% end %>
+  # </div>
+  #
+  #         :question, Enum.map(Enum.with_index(@questions), fn {%{question: q}, i} -> {"Q#{i+1}: #{q}", i} end), [class: "host question-select", size: "6"] %>
+
+  # attr :field, Phoenix.HTML.FormField
+  # attr :rest, :global, include: ~w(type)
+
+  # def input(assigns) do
+  #   IO.inspect(assigns, label: "assigns")
+
+  #   ~H"""
+  #   <input id={@field.id} name={@field.name} value={@field.value} {@rest} />
+  #   """
+  # end
+
+  def submitQuestionForm(assigns) do
+    IO.inspect(assigns, label: "Assigns")
+
+    assigns =
+      assign(
+        assigns,
+        :options,
+        Enum.map(Enum.with_index(assigns[:questions]), fn {%{question: q}, i} ->
+          {"Q#{i + 1}: #{q}", i}
+        end)
+      )
+
+    ~H"""
+    <div>
+      <.form
+        for={@question_select_form}
+        phx-change="validate"
+        phx-submit="save"
+        >
+        <.input
+          field={@question_select_form[:question]}
+          type="select"
+          options={@options}
+          class="host question-select"
+          size="6"
+        />
+        <div>
+          <%= submit "Submit Question" %>
+        </div>
+
+      </.form>
+
+      <button class="host close-voting button button-outline" phx-click="close">Close Voting</button>
     </div>
     """
   end

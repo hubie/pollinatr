@@ -8,7 +8,7 @@ defmodule PollinatrWeb.Login.TokenRedeemer do
 
   @impl true
   def render(assigns) do
-    ~L"""
+    ~H"""
         <div class="login header">
           Logging you in!
         </div>

@@ -57,7 +57,8 @@ defmodule Pollinatr.MixProject do
       {:cors_plug, "~> 2.0"},
       {:plug_canonical_host, "~> 2.0"},
       {:hackney, "~> 1.9"},
-      {:dotenvy, "~> 0.8.0"}
+      {:dotenvy, "~> 0.8.0"},
+      {:tailwind, "~> 0.1"}
       # {:elixir_google_spreadsheets, "~> 0.1.17"}
     ]
   end
@@ -76,6 +77,7 @@ defmodule Pollinatr.MixProject do
       # test: ["ecto.create --quiet", "ecto.migrate --quiet", "test"],
       "assets.deploy": [
         "esbuild default --minify",
+        "tailwind default --minify",
         "phx.digest"
       ]
     ]

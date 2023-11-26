@@ -15,9 +15,13 @@ config :pollinatr, PollinatrWeb.Endpoint,
   render_errors: [view: PollinatrWeb.ErrorView, accepts: ~w(html json), layout: false],
   pubsub_server: Pollinatr.PubSub,
   default_embedded_vote_mode: :vote,
-  cache_static_manifest: "priv/static/cache_manifest.json",
   # 90 days
   unsubscribe_link_lifespan: 90 * 24 * 60 * 60
+
+if Config.config_env() == :production do
+  config :pollinatr, PollinatrWeb.Endpoint,
+    cache_static_manifest: "priv/static/cache_manifest.json"
+end
 
 # config :goth, json: System.get_env("GOOGLE_SERVICE_KEY")
 
@@ -43,6 +47,17 @@ config :esbuild,
       ~w(js/app.js --bundle --target=es2016 --outdir=../priv/static/assets --external:/fonts/* --external:/images/* --external:/js/*),
     cd: Path.expand("../assets", __DIR__),
     env: %{"NODE_PATH" => Path.expand("../deps", __DIR__)}
+  ]
+
+config :tailwind,
+  version: "3.0.24",
+  default: [
+    args: ~w(
+      --config=tailwind.config.js
+      --input=css/app.css
+      --output=../priv/static/assets/app.css
+    ),
+    cd: Path.expand("../assets", __DIR__)
   ]
 
 # Configures Elixir's Logger

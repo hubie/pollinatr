@@ -81,7 +81,10 @@ defmodule PollinatrWeb.VoterLive do
     {:noreply, new_state}
   end
 
-  def handle_info({Results, %{new_question: question, voter_state: new_voter_state}} = msg, state) do
+  def handle_info(
+        {Results, %{new_question: question, voter_state: new_voter_state}} = _msg,
+        state
+      ) do
     new_state =
       state
       |> update(:question, fn _ -> question end)

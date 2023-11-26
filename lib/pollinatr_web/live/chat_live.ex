@@ -1,12 +1,9 @@
 defmodule PollinatrWeb.ChatLive do
   use Phoenix.LiveView
 
-  import Phoenix.LiveView.Helpers
-  import Phoenix.HTML.Form
-
-  alias PollinatrWeb.Components.ChatboxComponent
+  # alias PollinatrWeb.Components.ChatboxComponent
   alias Pollinatr.Models.EmailingList
-  alias Pollinatr.Presence
+  # alias Pollinatr.Presence
   alias Pollinatr.Chat.Chat
   alias Pollinatr.Chat.Message
   alias Pollinatr.Repo
@@ -155,7 +152,7 @@ defmodule PollinatrWeb.ChatLive do
             for={@new_message_form}
             phx-submit="save"
           >
-            <.input field={@new_message_form[:message]} placeholder="Message" class="send-message-input" phx_hook="MessageSubmit" />
+            <.input field={@new_message_form[:message]} placeholder="Message" class="send-message-input" />
             <button type="submit" class="send-message-submit">
               <i class="fas fa-paper-plane fa-lg"/>
             </button>

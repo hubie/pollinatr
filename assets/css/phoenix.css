@@ -273,7 +273,7 @@
    font-size: 2rem;
  }
  
- .host.question-select {
+ select, .host.question-select {
    width: 100%;
    height: 24rem;
  }

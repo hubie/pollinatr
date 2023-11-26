@@ -20,7 +20,8 @@ defmodule PollinatrWeb.Endpoint do
     at: "/",
     from: :pollinatr,
     gzip: false,
-    only: ~w(assets fonts images js css favicon.ico robots.txt webrtc_adaptor.js media_manager.js websocket_adaptor.js soundmeter.js peer_stats.js)
+    only:
+      ~w(assets fonts images favicon.ico robots.txt webrtc_adaptor.js media_manager.js websocket_adaptor.js soundmeter.js peer_stats.js)
 
   # Code reloading can be explicitly enabled under the
   # :code_reloader configuration of your endpoint.

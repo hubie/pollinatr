@@ -26,14 +26,17 @@ defmodule PollinatrWeb.Results do
 
         {:ok,
          assign(new_socket, :state, %{
-           question: %{question: question},
-           results: results,
-           params: params
+           @initial_store
+           | question: %{question: question},
+             results: results,
+             params: params
          })}
 
       %{question: %{}, results: []} ->
         new_socket = push_event(socket, "new_results", %{data: %{}})
-        {:ok, assign(new_socket, :state, %{question: %{}, results: [], params: params})}
+
+        {:ok,
+         assign(new_socket, :state, %{@initial_store | question: %{}, results: [], params: params})}
 
       cr ->
         IO.inspect(["Unexpected current results: ", cr])
@@ -60,7 +63,7 @@ defmodule PollinatrWeb.Results do
         Phoenix.View.render(PollinatrWeb.Results.Results, "headline_live.html", assigns)
 
       _ ->
-        ~L"""
+        ~H"""
         <div class="resultscontainer">
           <PollinatrWeb.Components.ResultsComponent.showResults />
         </div>

@@ -5,27 +5,39 @@ defmodule PollinatrWeb.Login.MagicTokenLive do
   @impl true
   def render(assigns) do
     ~L"""
-      <div class="login-container">
-        <div class="login header">
+      <div class="p-8">
+        <div class="login relative text-6xl font-serif sm:mx-auto sm:max-w-none text-center pb-12">
           Welcome to the Slackies
         </div>
         <%= if @email_sent != true do %>
-          <div class="login-box-container">
-            <%= form_for :user, "#", [phx_submit: :save, autocomplete: "off", autocorrect: "off", autocapitalize: "off", spellcheck: "false"], fn f -> %>
-              <fieldset class="flex flex-col md:w-full">
-
-                <div>
-                  <label class="login nickname-label">Chat Name:</label>
-                    <%= text_input f, :nickname, [class: "login password-box focus:border focus:border-b-0 rounded border", placeholder: "Nickname", aria_required: "true"] %>
-                  <label class="login access-code-label" for="form_email">Email Address:</label>
-                  <%= email_input f, :email_address, [class: "login password-box focus:border focus:border-b-0 rounded border", placeholder: "Email", aria_required: "true"] %>
-                  <%= submit "Submit" %>
+          <div class="mx-auto w-full sm:flex sm:items-center object-center sm:max-w-lg">
+            <%= form_for :user, "#", [phx_submit: :save, autocomplete: "off", autocorrect: "off", autocapitalize: "off", spellcheck: "false", class: "w-full"], fn f -> %>
+              <div class="sm:flex sm:items-center mb-6">
+                <div class="sm:w-1/3">
+                  <label class="block text-gray-100 font-bold sm:text-right mb-1 sm:mb-0 pr-4" for="user_nickname">Chat Name:</label>
                 </div>
-              </fieldset>
+                <div class="sm:w-2/3">
+                  <%= text_input f, :nickname, [class: "text-gray-900  min-w-full", placeholder: "Nickname", aria_required: "true"] %>
+                </div>
+              </div>
+              <div class="sm:flex sm:items-center mb-6">
+                <div class="sm:w-1/3">
+                  <label class="block text-gray-100 font-bold sm:text-right mb-1 sm:mb-0 pr-4" for="user_email_address">Email Address:</label>
+                </div>
+                <div class="sm:w-2/3">
+                  <%= email_input f, :email_address, [class: "text-gray-900 min-w-full", placeholder: "Email", aria_required: "true"] %>
+                </div>
+              </div>
+              <div class="sm:flex sm:items-center">
+                <div class="sm:w-1/3"></div>
+                <div class="sm:w-2/3">
+                  <%= submit "Submit", [class: "btn btn-default"] %>
+                </div>
+              </div>
             <% end %>
           </div>
         <% else %>
-          <div class="email-sent-container">
+          <div class="text-4xl ms-auto w-full text-center">
             Check your email for login links!
           </div>
         <% end %>
@@ -74,16 +86,18 @@ defmodule PollinatrWeb.Login.MagicTokenLive do
   end
 
   defp should_email(%{email_address: email_address}) do
-    cond do
-      Pollinatr.Models.EmailingList.email_allowed(%{list_name: "login", address: email_address}) ==
-          false ->
-        false
+    limit = 4
 
-      {:ok, _} = ExRated.check_rate("magic_token_login_" <> email_address, 1_440_000, 2) ->
-        true
-
-      true ->
-        false
+    with true <-
+           Pollinatr.Models.EmailingList.email_allowed(%{
+             list_name: "login",
+             address: email_address
+           }),
+         {:ok, _} <- ExRated.check_rate("magic_token_login_" <> email_address, 1_440_000, limit) do
+      true
+    else
+      {:error, limit} ->
+        {:error, :rate_limit_exceeded}
     end
   end
 end

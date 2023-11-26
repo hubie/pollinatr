@@ -9,6 +9,7 @@ defmodule Pollinatr.Models.User do
   def get_admin_codes() do
     [Application.get_env(:pollinatr, :admin_login_code)]
   end
+
   @refresh_period 120
 
   def create_user(%Ecto.Changeset{} = new_user) do
@@ -28,7 +29,7 @@ defmodule Pollinatr.Models.User do
     make_changeset(new_user) |> create_user()
   end
 
-  def get_user(%{validation_code: validation_code} = user) do
+  def get_user(%{validation_code: _validation_code} = user) do
     IO.inspect(user, label: "USER")
     current_time = DateTime.utc_now() |> DateTime.to_unix()
 
@@ -83,8 +84,8 @@ defmodule Pollinatr.Models.User do
     |> create_user()
   end
 
-  defp make_changeset(%{role: role} = user) do
-    changeset = UserSchema.changeset(%UserSchema{}, user)
+  defp make_changeset(%{role: _role} = user) do
+    UserSchema.changeset(%UserSchema{}, user)
   end
 
   defp refresh_voter_codes() do
@@ -104,31 +105,32 @@ defmodule Pollinatr.Models.User do
     :ets.insert(:auth_meta, {:last_refresh, refresh_time})
   end
 
-  defp get_codes(pid) do
-    get_codes(pid, 1)
-  end
+  # defp get_codes(pid) do
+  #   get_codes(pid, 1)
+  # end
 
-  defp get_codes(pid, start_row) do
-    max_rows = 300
-    end_row = start_row + max_rows
+  # defp get_codes(pid, start_row) do
+  #   max_rows = 300
+  #   end_row = start_row + max_rows
 
-    # {:ok, fetched_codes} = GSS.Spreadsheet.read_rows(pid, start_row, end_row, column_to: 1)
-    # new_codes = fetched_codes |> List.flatten() |> Enum.reject(&(is_nil(&1) || &1 == ""))
+  #   # {:ok, fetched_codes} = GSS.Spreadsheet.read_rows(pid, start_row, end_row, column_to: 1)
+  #   # new_codes = fetched_codes |> List.flatten() |> Enum.reject(&(is_nil(&1) || &1 == ""))
 
-    # case Enum.count(new_codes) do
-    #   0 ->
-    #     :ok
+  #   # case Enum.count(new_codes) do
+  #   #   0 ->
+  #   #     :ok
 
-    #   _ ->
-    #     vc = new_codes |> Enum.map(fn vc -> {:"#{vc}", :voter} end)
-    #     :ets.insert(:auth_codes, vc)
-    #     get_codes(pid, end_row + 1)
-    # end
-  end
+  #   #   _ ->
+  #   #     vc = new_codes |> Enum.map(fn vc -> {:"#{vc}", :voter} end)
+  #   #     :ets.insert(:auth_codes, vc)
+  #   #     get_codes(pid, end_row + 1)
+  #   # end
+  # end
 
   def authorize(_, %UserSchema{role: :admin}, _), do: true
   def authorize(:voter, %UserSchema{role: :voter}, _), do: true
   def authorize(_, %{user_id: nil}, _params), do: false
+
   def authorize(action, %{user_id: user_id}, params),
     do: authorize(action, Repo.get_by(UserSchema, id: user_id), params)
 
