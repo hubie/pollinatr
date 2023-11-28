@@ -182,7 +182,7 @@
    /*min-height: calc(100vh - 6rem);*/
  }
  
- .watch-layout {
+/* .watch-layout {
    display: flex;
    flex-direction: row;
    flex-wrap: wrap;
@@ -194,60 +194,9 @@
    display:  flex;
    flex: 3 1 90rem;
  
- }
- 
- .chat-layout > .embed-chat-container {
-   /*max-height: calc(100vh - 6rem);*/
-   min-height: min(80rem, calc(100vh - 7rem));
- }
- 
- .embed-chat-container {
-   display: flex;
-   flex: 1 1 50rem;
-   min-height: min(60rem, calc(100vh - 7rem));
-   max-height: calc(100vh - 6rem);
- }
- 
- .chat-container {
-   display: flex;
-   flex-grow: 1;
-   flex-flow: column;
- }
- .chat-container .chat-box {
-   color: white;
-   /*min-height: 60rem;*/
- }
- .chat-container .compose-message-box {
-   /*flex: 1;*/
- }
- 
- .chat-box {
-   display: flex;
-   flex: 1;
-   flex-direction: column;
-   align-items: stretch;
-   overflow-y: scroll;
-   overscroll-behavior-y: contain;
-   scroll-snap-type: y proximity;
- }
- 
- .chat-box > div:last-child {
-   scroll-snap-align: end;
- }
- 
- .chat-message {
-   padding: .3rem;
- }
- 
- .chat-message.sender {
-   font-weight: 500;
-   color: #F2BC23;
- }
+ }*/
 
- .ban-user-sigil {
-    cursor: pointer;
- }
- 
+
  .embed-vote-container {
    display: flex;
    width:  50%;
@@ -456,52 +405,7 @@
  .unsubscribe.content {
  
  }
- 
- 
- .send-message-form {
-   /* This bit sets up the horizontal layout */
-   display:flex;
-   flex-direction:row;
- 
-   /* This bit draws the box around it */
-   /*border:1px solid grey;*/
- 
-   /* I've used padding so you can see the edges of the elements. */
-   padding:2px;
-   margin-bottom: 0;
- }
- 
- 
- .liveview-chat-module {
-   display: flex;
-   flex: 1;
- }
- 
- .send-message-input {
-   /* Tell the input to use all the available space */
-   flex-grow:2;
-   /*min-width: 100%;*/
-   /*align-content: stretch;*/
-   /* And hide the input's outline, so the form looks like the outline */
-   border:none;
-   font-size: 1.5rem;
- }
- 
- .send-message-input input:focus {
-   /* removing the input focus blue box. Put this on the form if you like. */
-   outline: none;
- }
- 
- .send-message-submit {
-   /* Just a little styling to make it pretty */
-   /*border: 1px solid blue;*/
-   border-color: #F2BC23;
-   background: none;
-   color: #F2BC23;
-   padding-left: 1rem;
-   padding-right: 1rem;
-   margin-bottom: 0rem;
- }
+
  
  .vote-chat-scroll-tip {
    text-align: center;

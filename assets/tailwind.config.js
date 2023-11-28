@@ -15,7 +15,10 @@ module.exports = {
         'sans': ['Montserrat', 'Helvetica', 'Arial', 'sans-serif'],
         'mono': ['ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', 'Liberation Mono', "Courier New", 'monospace'],
       },
-
+      colors: {
+        'theme-primary': "#F2BC23",
+        'theme-active': "#F27F20",
+      }
     },
   },
   plugins: [

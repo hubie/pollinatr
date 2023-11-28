@@ -1,6 +1,6 @@
 
-  <div class="watch-layout">
-    <div class="watch-container">
+  <div class="watch-layout w-full flex items-center object-center">
+    <div class="watch-container flex-1 md:min-w-64 mb-6">
       <%= case @player do %>
         <% "webrtc" -> %>
           <video id="player-video" width="100%" autoplay playsinline controls></video>
@@ -43,7 +43,7 @@
           </script>
         <% "ant_media" -> %>
           <video width="100%" id="video-player" autoplay controls playsinline></video>
-<!--          <button type="button" id="start">Start</button>
+          <!--          <button type="button" id="start">Start</button>
           <button type="button" id="stop">Stop</button> -->
 
           <script type="module" lang="javascript">
@@ -103,8 +103,8 @@
 
         <% "ant_media_2" -> %>
 
-<script src=<%= Routes.static_path(PollinatrWeb.Endpoint, "/js/video.min.js") %>></script>
-<script src=<%= Routes.static_path(PollinatrWeb.Endpoint, "/js/videojs-webrtc-plugin.min.js") %>></script>
+          <script src=<%= Routes.static_path(PollinatrWeb.Endpoint, "/js/video.min.js") %>></script>
+          <script src=<%= Routes.static_path(PollinatrWeb.Endpoint, "/js/videojs-webrtc-plugin.min.js") %>></script>
 
           <div id="video_container">
               <video id=video-player width=960 height=540 class="video-js vjs-default-skin" controls>
@@ -130,10 +130,10 @@
           </script>
       <% end %>
     </div>
-    <div class="embed-chat-container">
+    <div class="embed-chat-container md:w-1/3 mb-6 min-h-[min(80rem, calc(100vh - 7rem))] max-h-[calc(100vh - 6rem)]">
       <%= live_render(@conn, PollinatrWeb.ChatLive, container: {:div, class: "liveview-chat-module"}) %>
     </div>
-    <div class="embed-vote-container">
+    <div class="embed-vote-container md:flex mb-6">
           <%= live_render(@conn, PollinatrWeb.VoterLive) %>
     </div>
 

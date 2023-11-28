@@ -134,26 +134,27 @@ defmodule PollinatrWeb.ChatLive do
 
   def render(assigns) do
     ~H"""
-    <div class="content-body">
-      <div class="chat-container">
-        <div class="chat-box" id="chat-box" phx-update="append">
+    <div class="bg-black/[.85]">
+      <div class="chat-container p-4">
+        <div class="chat-box h-[min(60rem,calc(100vh-7rem))] overflow-y-scroll snap-y max-w-lg" id="chat-box" phx-update="append">
           <%= for %{user_id: user_id, username: username, nickname: nickname, message: message, index: id} <- @messages do %>
-            <div class="chat-message" id={"chat-message-#{id}"}>
-              <span class="chat-message sender" title={username}><%= nickname %></span>
-                <span :if={@role == :admin} class="ban-user-sigil" title={"Kick and Ban user_id #{user_id}"} phx-click="ban-user" phx-value-userid={user_id}>🚫</span>
+            <div class="chat-message last:snap-end last:snap-mandatory py-1 " id={"chat-message-#{id}"}>
+              <span class="chat-message sender font-medium text-theme-primary" title={username}><%= nickname %></span>
+                <span :if={@role == :admin} class="ban-user-sigil cursor-pointer" title={"Kick and Ban user_id #{user_id}"} phx-click="ban-user" phx-value-userid={user_id}>🚫</span>
               <br/>
-              <span class="chat-message message"><%= message %></span>
+              <span class="chat-message message break-words"><%= message %></span>
             </div>
           <% end %>
         </div>
 
-        <div class="compose-message-box">
+        <div class="compose-message-box pt-4">
           <.form
             for={@new_message_form}
             phx-submit="save"
+            class="flex"
           >
-            <.input field={@new_message_form[:message]} placeholder="Message" class="send-message-input" />
-            <button type="submit" class="send-message-submit">
+            <.input field={@new_message_form[:message]} placeholder="Message" class="p-2 send-message-input flex-1 text-black" />
+            <button type="submit" class="send-message-submit flex-none text-theme-primary hover:text-theme-active px-1">
               <i class="fas fa-paper-plane fa-lg"/>
             </button>
           </.form>
