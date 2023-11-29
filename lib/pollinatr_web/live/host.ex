@@ -18,7 +18,7 @@ defmodule PollinatrWeb.Host do
     show_mode: nil,
     tenant_id: nil,
     message: nil,
-    question_select_form: %{"question" => nil} |> to_form()
+    question_select_form: %{"question_select" => nil} |> to_form()
   }
 
   def subscribe do
@@ -76,7 +76,7 @@ defmodule PollinatrWeb.Host do
     {:noreply, assign(socket, changeset: changeset)}
   end
 
-  def handle_event("save", %{"question_select" => %{"question" => question_index}}, socket) do
+  def handle_event("save", %{"question_select" => question_index}, socket) do
     %{question: _question, answers: _answers, id: id} =
       socket.assigns.questions |> Enum.at(String.to_integer(question_index))
 
@@ -89,8 +89,9 @@ defmodule PollinatrWeb.Host do
     {:noreply, assign(socket, changeset: %{message: message})}
   end
 
-  def handle_event("save", _, socket) do
+  def handle_event("save", msg, socket) do
     # no qustion selected
+    IO.inspect(msg, label: "unrecognized message:")
     {:noreply, socket}
   end
 
@@ -179,7 +180,7 @@ defmodule PollinatrWeb.Host do
         phx-submit="save"
         >
         <.input
-          field={@question_select_form[:question]}
+          field={@question_select_form[:question_select]}
           type="select"
           options={@options}
           class="host question-select"

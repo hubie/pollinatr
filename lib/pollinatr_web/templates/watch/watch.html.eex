@@ -1,140 +1,140 @@
 
-  <div class="watch-layout w-full grid xl:grid-cols-6 xl:grid-rows-2 min-w-full lg:grid-cols-2 sm:grid-cols-1">
-    <div class="watch-container lg:min-w-[50%] mb-6 xl:col-start-1 xl:col-span-4 xl:row-span-1 lg:col-span-2 sm:col-span-1">
-      <%= case @player do %>
-        <% "webrtc" -> %>
-          <video id="player-video" width="100%" autoplay playsinline controls></video>
-          <div>
-            <button phx-click="video_player" value="legacy">Legacy Player (High Latency)</button>
-          </div>
-        <% "streamshark" -> %>
-          <script type="text/javascript">
-            function resizeVideopanel() {
-                var iFrameID = document.getElementById('streamshark-videopanel');
-                if(iFrameID) {
-                      var width = iFrameID.clientWidth
-                      if(width < 768)  {
-                        iFrameID.style.height = ((9/16)*width+400) + 'px';
-                      } else {
-                        iFrameID.style.height = (9/16)*(width*(3/4)) + 'px';
-                      }
-                }
-            }
-            window.addEventListener('resize', resizeVideopanel)
-
-            function iframeLoaded() {
-              resizeVideopanel()
-            }
-          </script>
-          <iframe id="streamshark-videopanel" style="width:100%" onload="iframeLoaded()"  src="<%= Application.get_env(:pollinatr, PollinatrWeb.Endpoint)[:streamshark_stream_url] %>/embedComment" frameborder="0" allow="autoplay" allowfullscreen webkitallowfullscreen mozallowfullscreen oallowfullscreen msallowfullscreen > </iframe>
-
-          <%# <iframe id="streamshark-videopanel" style="width:100%" onload="iframeLoaded()" src="https://play.streamshark.io/r/e/crrzqgkwy/test-transcode-gvyw3c/embed" frameborder="0" allow="autoplay" allowfullscreen webkitallowfullscreen mozallowfullscreen oallowfullscreen msallowfullscreen > </iframe>       %>
-
-        <% "aws_ivs" -> %>
-          <script src="https://player.live-video.net/1.6.1/amazon-ivs-player.min.js"></script>
-          <video width="100%" id="player-video" autoplay playsinline controls></video>
-          <script type="text/javascript">
-            if (IVSPlayer.isPlayerSupported) {
-              const player = IVSPlayer.create();
-              player.attachHTMLVideoElement(document.getElementById('player-video'));
-              player.load("<%= Application.get_env(:pollinatr, PollinatrWeb.Endpoint)[:aws_ivs_stream_url] %>");
-              player.play();
-            }
-          </script>
-        <% "ant_media" -> %>
-          <video width="100%" id="video-player" autoplay controls playsinline></video>
-          <!--          <button type="button" id="start">Start</button>
-          <button type="button" id="stop">Stop</button> -->
-
-          <script type="module" lang="javascript">
-            import {WebRTCAdaptor} from "./webrtc_adaptor.js"
-
-            let websocketURL =  "wss://streamhost.slackies.live:5443/WebRTCAppEE/websocket?target=edge";
-
-            let mediaConstraints = {
-              video : false,
-              audio : false
-            };
-
-            let pc_config = {
-              'iceServers' : [ {
-                'urls' : 'stun:stun1.l.google.com:19302'
-              } ]
-            };
-
-            let sdpConstraints = {
-              OfferToReceiveAudio : true,
-              OfferToReceiveVideo : true
-            };
-
-            var webRTCAdaptor = new WebRTCAdaptor({
-              websocket_url : websocketURL,
-              mediaConstraints : mediaConstraints,
-              peerconnection_config : pc_config,
-              sdp_constraints : sdpConstraints,
-              remoteVideoId : "video-player",
-              isPlayMode : true,
-              callback : (info, obj) => {
-                if (info == "initialized") {
-                  let streamId = "7aQ1JFQ2nzdN1669772737568";
-                  webRTCAdaptor.play(streamId, "", "", [], "", "");
-                }
-                else {
-                  console.log( info + " notification received");
-                }
-              },
-              callbackError : function(error, message) {
-                console.log("error callback: " +  JSON.stringify(error));
+<div class="watch-layout w-full grid xl:grid-cols-6 xl:grid-rows-2 min-w-full lg:grid-cols-2 sm:grid-cols-1">
+  <div class="watch-container lg:min-w-[50%] mb-6 xl:col-start-1 xl:col-span-4 xl:row-span-1 lg:col-span-2 sm:col-span-1">
+    <%= case @player do %>
+      <% "webrtc" -> %>
+        <video id="player-video" width="100%" autoplay playsinline controls></video>
+        <div>
+          <button phx-click="video_player" value="legacy">Legacy Player (High Latency)</button>
+        </div>
+      <% "streamshark" -> %>
+        <script type="text/javascript">
+          function resizeVideopanel() {
+              var iFrameID = document.getElementById('streamshark-videopanel');
+              if(iFrameID) {
+                    var width = iFrameID.clientWidth
+                    if(width < 768)  {
+                      iFrameID.style.height = ((9/16)*width+400) + 'px';
+                    } else {
+                      iFrameID.style.height = (9/16)*(width*(3/4)) + 'px';
+                    }
               }
-            });
+          }
+          window.addEventListener('resize', resizeVideopanel)
 
-          </script>
+          function iframeLoaded() {
+            resizeVideopanel()
+          }
+        </script>
+        <iframe id="streamshark-videopanel" style="width:100%" onload="iframeLoaded()"  src="<%= Application.get_env(:pollinatr, PollinatrWeb.Endpoint)[:streamshark_stream_url] %>/embedComment" frameborder="0" allow="autoplay" allowfullscreen webkitallowfullscreen mozallowfullscreen oallowfullscreen msallowfullscreen > </iframe>
 
+        <%# <iframe id="streamshark-videopanel" style="width:100%" onload="iframeLoaded()" src="https://play.streamshark.io/r/e/crrzqgkwy/test-transcode-gvyw3c/embed" frameborder="0" allow="autoplay" allowfullscreen webkitallowfullscreen mozallowfullscreen oallowfullscreen msallowfullscreen > </iframe>       %>
 
-        <% "ant_media_3" -> %>
-          <link rel="stylesheet" href="https://streamhost.slackies.live:5443/WebRTCAppEE/css/player.css"/>
-          <script>
-            const response = await fetch('https://streamhost.slackies.live:5443/WebRTCAppEE/play.html?id=7aQ1JFQ2nzdN1669772737568');
-            const body = await response.text();
+      <% "aws_ivs" -> %>
+        <script src="https://player.live-video.net/1.6.1/amazon-ivs-player.min.js"></script>
+        <video width="100%" id="player-video" autoplay playsinline controls></video>
+        <script type="text/javascript">
+          if (IVSPlayer.isPlayerSupported) {
+            const player = IVSPlayer.create();
+            player.attachHTMLVideoElement(document.getElementById('player-video'));
+            player.load("<%= Application.get_env(:pollinatr, PollinatrWeb.Endpoint)[:aws_ivs_stream_url] %>");
+            player.play();
+          }
+        </script>
+      <% "ant_media" -> %>
+        <video width="100%" id="video-player" autoplay controls playsinline></video>
+        <!--          <button type="button" id="start">Start</button>
+        <button type="button" id="stop">Stop</button> -->
 
-            document.querySelector('#embed-player').innerHTML = body;
-          </script>
-          <div id="embed-player"></div>
+        <script type="module" lang="javascript">
+          import {WebRTCAdaptor} from "./webrtc_adaptor.js"
 
-        <% "ant_media_2" -> %>
+          let websocketURL =  "wss://streamhost.slackies.live:5443/WebRTCAppEE/websocket?target=edge";
 
-          <script src=<%= Routes.static_path(PollinatrWeb.Endpoint, "/js/video.min.js") %>></script>
-          <script src=<%= Routes.static_path(PollinatrWeb.Endpoint, "/js/videojs-webrtc-plugin.min.js") %>></script>
+          let mediaConstraints = {
+            video : false,
+            audio : false
+          };
 
-          <div id="video_container">
-              <video id=video-player width=960 height=540 class="video-js vjs-default-skin" controls>
-                  <source
-                    src="wss://streamhost.slackies.live:5443/WebRTCAppEE/websocket?target=edge" iceServers = '[ { "urls": "stun:stun1.l.google.com:19302" } ]'
-                    >
-                </video>
-          </div>
-          <script>
-            var player = videojs('video-player');
-          </script>
-        <% _ -> %>
-          <script src="https://player.live-video.net/1.2.0/amazon-ivs-player.min.js"></script>
-          <video id="video-player" style="width:100%;height:100%;" playsinline autoplay muted controls></video>
-          <script>
-            if (IVSPlayer.isPlayerSupported) {
-              const player = IVSPlayer.create();
-              player.attachHTMLVideoElement(document.getElementById('video-player'));
-              player.load(<%= Application.fetch_env!(:pollinatr, PollinatrWeb.Endpoint)[:aws_ivs_stream_url] %>)
-              // player.load("https://db56b4e6eb14.us-west-2.playback.live-video.net/api/video/v1/us-west-2.782786320381.channel.kyYKOxpFsX9D.m3u8");
-              player.play();
+          let pc_config = {
+            'iceServers' : [ {
+              'urls' : 'stun:stun1.l.google.com:19302'
+            } ]
+          };
+
+          let sdpConstraints = {
+            OfferToReceiveAudio : true,
+            OfferToReceiveVideo : true
+          };
+
+          var webRTCAdaptor = new WebRTCAdaptor({
+            websocket_url : websocketURL,
+            mediaConstraints : mediaConstraints,
+            peerconnection_config : pc_config,
+            sdp_constraints : sdpConstraints,
+            remoteVideoId : "video-player",
+            isPlayMode : true,
+            callback : (info, obj) => {
+              if (info == "initialized") {
+                let streamId = "7aQ1JFQ2nzdN1669772737568";
+                webRTCAdaptor.play(streamId, "", "", [], "", "");
+              }
+              else {
+                console.log( info + " notification received");
+              }
+            },
+            callbackError : function(error, message) {
+              console.log("error callback: " +  JSON.stringify(error));
             }
-          </script>
-      <% end %>
-    </div>
-    <div class="embed-chat-container mb-6 min-h-[min(80rem, calc(100vh - 7rem))] max-h-[calc(100vh - 6rem)] xl:col-start-5 xl:col-span-2 xl:row-span-2 sm:col-span-1">
-      <%= live_render(@conn, PollinatrWeb.ChatLive, container: {:div, class: "liveview-chat-module"}) %>
-    </div>
-    <div class="embed-vote-container lg:flex mb-6 xl:col-start-1 xl:col-span-4 xl:row-span-1 sm:col-span-1">
-          <%= live_render(@conn, PollinatrWeb.VoterLive) %>
-    </div>
+          });
 
+        </script>
+
+
+      <% "ant_media_3" -> %>
+        <link rel="stylesheet" href="https://streamhost.slackies.live:5443/WebRTCAppEE/css/player.css"/>
+        <script>
+          const response = await fetch('https://streamhost.slackies.live:5443/WebRTCAppEE/play.html?id=7aQ1JFQ2nzdN1669772737568');
+          const body = await response.text();
+
+          document.querySelector('#embed-player').innerHTML = body;
+        </script>
+        <div id="embed-player"></div>
+
+      <% "ant_media_2" -> %>
+
+        <script src=<%= Routes.static_path(PollinatrWeb.Endpoint, "/js/video.min.js") %>></script>
+        <script src=<%= Routes.static_path(PollinatrWeb.Endpoint, "/js/videojs-webrtc-plugin.min.js") %>></script>
+
+        <div id="video_container">
+            <video id=video-player width=960 height=540 class="video-js vjs-default-skin" controls>
+                <source
+                  src="wss://streamhost.slackies.live:5443/WebRTCAppEE/websocket?target=edge" iceServers = '[ { "urls": "stun:stun1.l.google.com:19302" } ]'
+                  >
+              </video>
+        </div>
+        <script>
+          var player = videojs('video-player');
+        </script>
+      <% _ -> %>
+        <script src="https://player.live-video.net/1.2.0/amazon-ivs-player.min.js"></script>
+        <video id="video-player" style="width:100%;height:100%;" playsinline autoplay muted controls></video>
+        <script>
+          if (IVSPlayer.isPlayerSupported) {
+            const player = IVSPlayer.create();
+            player.attachHTMLVideoElement(document.getElementById('video-player'));
+            player.load(<%= Application.fetch_env!(:pollinatr, PollinatrWeb.Endpoint)[:aws_ivs_stream_url] %>)
+            // player.load("https://db56b4e6eb14.us-west-2.playback.live-video.net/api/video/v1/us-west-2.782786320381.channel.kyYKOxpFsX9D.m3u8");
+            player.play();
+          }
+        </script>
+    <% end %>
   </div>
+  <div class="embed-chat-container mb-6 min-h-[min(80rem, calc(100vh - 7rem))] max-h-[calc(100vh - 6rem)] xl:col-start-5 xl:col-span-2 xl:row-span-2 sm:col-span-1">
+    <%= live_render(@conn, PollinatrWeb.ChatLive, container: {:div, class: "liveview-chat-module"}) %>
+  </div>
+  <div class="embed-vote-container mb-6 xl:col-start-1 xl:col-span-4 xl:row-span-1 sm:col-span-1">
+        <%= live_render(@conn, PollinatrWeb.VoterLive) %>
+  </div>
+
+</div>
