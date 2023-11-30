@@ -96,7 +96,7 @@ defmodule PollinatrWeb.Login.MagicTokenLive do
          {:ok, _} <- ExRated.check_rate("magic_token_login_" <> email_address, 1_440_000, limit) do
       true
     else
-      {:error, limit} ->
+      {:error, _limit} ->
         {:error, :rate_limit_exceeded}
     end
   end

@@ -17,6 +17,7 @@ module.exports = {
       },
       colors: {
         'theme-primary': "#F2BC23",
+        'theme-secondary': "#2D3748",
         'theme-active': "#F27F20",
       }
     },

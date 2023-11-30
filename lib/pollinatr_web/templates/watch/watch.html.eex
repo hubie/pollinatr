@@ -133,7 +133,7 @@
   <div class="embed-chat-container mb-6 min-h-[min(80rem, calc(100vh - 7rem))] max-h-[calc(100vh - 6rem)] xl:col-start-5 xl:col-span-2 xl:row-span-2 sm:col-span-1">
     <%= live_render(@conn, PollinatrWeb.ChatLive, container: {:div, class: "liveview-chat-module"}) %>
   </div>
-  <div class="embed-vote-container mb-6 xl:col-start-1 xl:col-span-4 xl:row-span-1 sm:col-span-1">
+  <div class="embed-vote-container m-6 xl:col-start-1 xl:col-span-4 xl:row-span-1 sm:col-span-1">
         <%= live_render(@conn, PollinatrWeb.VoterLive) %>
   </div>
 
