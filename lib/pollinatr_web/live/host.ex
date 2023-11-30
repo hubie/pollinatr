@@ -108,12 +108,12 @@ defmodule PollinatrWeb.Host do
   def render(assigns) do
     ~H"""
     <div class="content-body">
-      <div class="host-container">
-        <div>
+      <div class="host-container text-2xl space-y-4">
+        <div class="">
           Mode:
-          <button class="host mode {if @show_mode == :preshow, do: {selected}}" phx-click="showmode" phx-value-mode="preshow">Preshow</button>
-          <button class="host mode {if @show_mode == :show, do: {selected}}" phx-click="showmode" phx-value-mode="show">Show</button>
-          <button class="host mode {if @show_mode == :postshow, do: {selected}}" phx-click="showmode" phx-value-mode="postshow">Postshow</button>
+          <button class={if @show_mode == :preshow, do: "btn btn-active", else: "btn btn-default"} phx-click="showmode" phx-value-mode="preshow">Preshow</button>
+          <button class={if @show_mode == :show, do: "btn btn-active", else: "btn btn-default"} phx-click="showmode" phx-value-mode="show">Show</button>
+          <button class={if @show_mode == :postshow, do: "btn btn-active", else: "btn btn-default"} phx-click="showmode" phx-value-mode="postshow">Postshow</button>
         </div>
         <.submitQuestionForm questions={@questions} question_select_form={@question_select_form}/>
         <div class="host open-question live-results">
@@ -173,7 +173,7 @@ defmodule PollinatrWeb.Host do
       )
 
     ~H"""
-    <div>
+    <div class="text-2xl space-y-4">
       <.form
         for={@question_select_form}
         phx-change="validate"
@@ -183,16 +183,15 @@ defmodule PollinatrWeb.Host do
           field={@question_select_form[:question_select]}
           type="select"
           options={@options}
-          class="host question-select"
           size="6"
         />
         <div>
-          <%= submit "Submit Question" %>
+          <%= submit "Submit Question", class: "btn btn-default"%>
         </div>
 
       </.form>
 
-      <button class="host close-voting button button-outline" phx-click="close">Close Voting</button>
+      <button class="host close-voting btn btn-default" phx-click="close">Close Voting</button>
     </div>
     """
   end

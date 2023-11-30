@@ -21,7 +21,9 @@ defmodule PollinatrWeb.Components.VoteComponent do
       <% :show -> %>
         <%= case @voter_state do %>
           <% :voting_closed -> %>
-                Suspenseful Music Playing<span class="ellipsis-anim"><span>.</span><span>.</span><span>.</span></span>
+            <div class="lg:text-4xl md:text-2xl sm:text-2xl font-extrabold text-center space-y-4">
+              Suspenseful Music Playing<span class="ellipsis-anim"><span>.</span><span>.</span><span>.</span></span>
+            </div>
           <% :voted -> %>
             <div class="lg:text-6xl md:text-4xl sm:text-2xl font-extrabold text-center space-y-4">
               Your vote has been counted!
