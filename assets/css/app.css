@@ -22,40 +22,6 @@
 }
 
 
-
-
-/* button {
-   background: #F2BC23;
-   font-family: Montserrat, sans-serif;
-   text-transform: none;
-   font-size: 1.5rem;
- }
-*/
-/* .voting {
-   color: white;
-   font-family: Montserrat, sans-serif;
-   font-weight: 400;
-   text-align: center;
- }
-
- .voting h2 {
-   font-family: Abril Fatface;
-   font-size: 6rem;
- }*/
-
-/* .hero.title {
-   font-size: 6rem;
-   color: rgb(242,188,35);
-   font-family: Montserrat, sans-serif;
-   font-weight: 800;
- }
-
- .logo img {
-   margin: 2rem;
-   height: 6rem;
-   display: block;
- }
-*/
  .message-text {
    font-style: italic;
  }
@@ -73,53 +39,9 @@
  }
 
 
-/* .embed-vote-container {
-   display: flex;
-   width:  50%;
-   flex: 1 1 auto;
- }
-
- .flex-enabled-liveview {
-   display: flex;
-   flex: 1;
- }*/
-
  li {
    margin-bottom: .5rem;
  }
-
- .title-image {
-   height: 6rem;
- }
-/*
- select, .host.question-select {
-   width: 100%;
-   height: 24rem;
- }
-
- .host.open-question.live-results {
-   border-style: solid;
-   border-color: #333333;
- }
-
- .host.open-question {
-   color: #666666;
- }
-
- .host.mode.selected {
-   background-color: #02b126;
- }*/
-/*
- .voter.answer {
-   vertical-align: middle;
-   margin: 1.5rem;
-   max-width: 20rem;
-   height: 6rem;
-   font-size: 2rem;
-   line-height: 2rem;
-   white-space: normal;
-   word-wrap: break-word;
- }*/
 
  .fas.fa-vote-yea.vote-counted {
    font-size: 10rem;
@@ -192,35 +114,6 @@
    color: blue;
  }
 
- .voteinstructions {
-   line-height: 3.2rem;
- }
-
- .voteinstructions.title {
-   font-size: 4rem;
-   font-style: bold;
-   font-family: "arial black";
-   margin-bottom: 2rem;
- }
-/*
- .voteinstructions.instructions {
-   font-size: 3rem;
- }
-
- .voteinstructions.instructions ol {
-   margin-left: 2rem;
-   margin-top: 1rem;
- }
-
- .voteinstructions.votehere {
-   font-size: 1.8rem;
-   font-style: oblique;
- }
- .voteinstructions.votehere.link {
-   color: #0069d9;
- }*/
-
-
  .unsubscribe.container {
    text-align: center;
  }
@@ -280,11 +173,6 @@
    100% { opacity: 0; }
  }
 
-/* input, select, textarea {
-   color: #eeeeee;
-   font-size: 24pt;
- }
-*/
  body:not(.embedded) {
   background-image: url("/images/glitter_bg.jpg");
   background-color: #000000;
