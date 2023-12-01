@@ -70,8 +70,8 @@ if config_env() == :prod do
     check_origin:
       env!("CHECK_ORIGINS", :string!, "//localhost,//pollinatr.fly.dev") |> String.split(","),
     secret_key_base: env!("SECRET_KEY_BASE", :string!),
-    streamshark_stream_url: env!("STREAMSHARK_STREAM_URL", :string),
-    aws_ivs_stream_url: env!("AWS_IVS_STREAM_URL", :string),
+    streamshark_stream_url: env("STREAMSHARK_STREAM_URL", :string),
+    aws_ivs_stream_url: env("AWS_IVS_STREAM_URL", :string),
     http: [
       # Enable IPv6 and bind on all interfaces.
       # Set it to  {0, 0, 0, 0, 0, 0, 0, 1} for local network only access.

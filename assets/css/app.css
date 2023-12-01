@@ -28,14 +28,20 @@
 
  .content-body {
    display: flex;
-   flex-grow: 1;
+/*   flex-grow: 1;*/
    align-content: center;
    margin:  3rem;
    background-color: rgba(0,0,0,0.85);
    position: relative;
+   min-width: 100%;
    /*min-height: 40rem;*/
    align-items: stretch;
    /*min-height: calc(100vh - 6rem);*/
+ }
+
+ .flex-enabled-liveview {
+  display: flex;
+  flex: 1;
  }
 
 
