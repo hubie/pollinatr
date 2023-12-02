@@ -20,7 +20,9 @@ config :pollinatr, Pollinatr.Helpers.Mailer,
 config :pollinatr, PollinatrWeb.Endpoint,
   live_view: [signing_salt: env!("LIVEVIEW_SIGNING_SALT", :string!)],
   default_video_provider: env!("DEFAULT_VIDEO_PROVIDER", :string, "streamshark"),
-  ant_media_stream_url: env!("ANT_MEDIA_STREAM_URL", :string)
+  ant_media_stream_url: env!("ANT_MEDIA_STREAM_URL", :string, ""),
+  aws_ivs_stream_url: env!("AWS_IVS_STREAM_URL", :string, ""),
+  streamshark_stream_url: env!("STREAMSHARK_STREAM_URL", :string, ""),
 
 config :logger, :console,
   format: "$time $metadata[$level] $message\n",
@@ -64,14 +66,18 @@ if config_env() == :prod do
 
   host = env!("PHX_HOST", :string, "pollinatr.fly.dev")
 
+  # ## Using releases
+  #
+  # If you are doing OTP releases, you need to instruct Phoenix
+  # to start each relevant endpoint (by setting server: true)
+  #
   config :pollinatr, PollinatrWeb.Endpoint,
     url: [host: host, scheme: "https", port: 443],
+    server: true,
     # url: [host: "pollinatr.fly.dev", port: 80],
     check_origin:
       env!("CHECK_ORIGINS", :string!, "//localhost,//pollinatr.fly.dev") |> String.split(","),
-    secret_key_base: env!("SECRET_KEY_BASE", :string!),
-    streamshark_stream_url: env("STREAMSHARK_STREAM_URL", :string),
-    aws_ivs_stream_url: env("AWS_IVS_STREAM_URL", :string),
+    secret_key_base: env!(secret_key_base, :string!),
     http: [
       # Enable IPv6 and bind on all interfaces.
       # Set it to  {0, 0, 0, 0, 0, 0, 0, 1} for local network only access.
@@ -79,8 +85,7 @@ if config_env() == :prod do
       # for details about using IPv6 vs IPv4 and loopback vs public addresses.
       ip: {0, 0, 0, 0, 0, 0, 0, 0},
       port: env!("PORT", :integer, 4000)
-    ],
-    secret_key_base: secret_key_base
+    ]
 
   maybe_ipv6 = if env!("ECTO_IPV6"), do: [:inet6], else: []
 
@@ -90,12 +95,6 @@ if config_env() == :prod do
     pool_size: env!("DB_POOL_SIZE", :integer, 9),
     socket_options: maybe_ipv6
 
-  # ## Using releases
-  #
-  # If you are doing OTP releases, you need to instruct Phoenix
-  # to start each relevant endpoint:
-  #
-  config :pollinatr, PollinatrWeb.Endpoint, server: true
   #
   # Then you can assemble a release by calling `mix release`.
   # See `mix help release` for more information.
