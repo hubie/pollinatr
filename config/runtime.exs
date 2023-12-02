@@ -22,7 +22,7 @@ config :pollinatr, PollinatrWeb.Endpoint,
   default_video_provider: env!("DEFAULT_VIDEO_PROVIDER", :string, "streamshark"),
   ant_media_stream_url: env!("ANT_MEDIA_STREAM_URL", :string, ""),
   aws_ivs_stream_url: env!("AWS_IVS_STREAM_URL", :string, ""),
-  streamshark_stream_url: env!("STREAMSHARK_STREAM_URL", :string, ""),
+  streamshark_stream_url: env!("STREAMSHARK_STREAM_URL", :string, "")
 
 config :logger, :console,
   format: "$time $metadata[$level] $message\n",
