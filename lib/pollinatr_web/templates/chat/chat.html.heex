@@ -3,10 +3,11 @@
     <div class="embed-chat-container">
       <%= live_render(@conn, PollinatrWeb.ChatLive, container: {:div, class: "liveview-chat-module"}) %>
     </div>
-    <div class="vote-chat-scroll-tip">
-      <i class="fas fa-arrow-down"></i>&nbsp;Vote&nbsp;<i class="fas fa-arrow-down"></i>
-    </div>
-    <div class="embed-vote-container">
+    <%# <div class="vote-chat-scroll-tip"> %>
+      <%# <div class="{`vote-chat-scroll-tip ${elementIsVisibleInViewport(document.getElementById('vote-container')) ? 'visible' : 'not-visible'}`}"> %>
+      <%# <i class="fas fa-arrow-down"></i>&nbsp;Vote&nbsp;<i class="fas fa-arrow-down"></i> %>
+    <%# </div> %>
+    <div id="vote-container" class="embed-vote-container">
           <%= live_render(@conn, PollinatrWeb.VoterLive) %>
     </div>
 

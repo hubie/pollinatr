@@ -8,7 +8,7 @@ defmodule PollinatrWeb.Components.QuestionComponent do
     </h1>
     <div class="voter answers">
       <%= for answer <- get_in(@question, [:answers]) || [] do %>
-        <button phx-click="submitAnswer" class="btn-vote btn-default text-2xl" value={answer}><%= answer %></button>
+        <button phx-click="submitAnswer" class="btn btn-vote text-2xl" value={answer}><%= answer %></button>
       <% end %>
     </div>
     <div id="countdownTimer" phx-hook="Timer"></div>

@@ -12,7 +12,7 @@
   @apply bg-theme-secondary text-theme-primary
 }
 .btn-vote {
-  @apply font-bold py-2 px-4 mx-4 rounded;
+  @apply bg-theme-primary text-theme-secondary font-bold mx-4 my-2 rounded;
 }
 .btn-default {
   @apply bg-theme-primary text-theme-secondary;
@@ -24,23 +24,6 @@
 
  .message-text {
    font-style: italic;
- }
-
- .content-body {
-   display: flex;
-/*   flex-grow: 1;*/
-   align-content: center;
-   margin:  3rem;
-   background-color: rgba(0,0,0,0.85);
-   position: relative;
-   /*min-height: 40rem;*/
-   align-items: stretch;
-   /*min-height: calc(100vh - 6rem);*/
- }
-
- .flex-enabled-liveview {
-  display: flex;
-  flex: 1;
  }
 
 
