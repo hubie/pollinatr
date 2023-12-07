@@ -77,7 +77,7 @@ if config_env() == :prod do
     # url: [host: "pollinatr.fly.dev", port: 80],
     check_origin:
       env!("CHECK_ORIGINS", :string!, "//localhost,//pollinatr.fly.dev") |> String.split(","),
-    secret_key_base: env!(secret_key_base, :string!),
+    secret_key_base: secret_key_base,
     http: [
       # Enable IPv6 and bind on all interfaces.
       # Set it to  {0, 0, 0, 0, 0, 0, 0, 1} for local network only access.
